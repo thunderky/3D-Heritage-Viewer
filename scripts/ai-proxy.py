@@ -12,13 +12,45 @@ from typing import Any, Dict, List, Optional
 
 from rag import load_default_kb, RAGKnowledgeBase
 
-# 警告：API密钥在此处硬编码。在生产环境中，应使用更安全的方法（如环境变量）来管理密钥。
-API_KEY = 'sk-0e4fac7233614d8d8b1432f7b6c3ae5a'  # DeepSeek API Key
-API_ENDPOINT = 'https://api.deepseek.com/chat/completions'  # DeepSeek API 端点
-API_PROVIDER = 'deepseek'  # 'deepseek' 或 'qianwen'
-
 SCRIPT_DIR = Path(__file__).resolve().parent
 KB_PATH = SCRIPT_DIR.parent / 'data' / 'descriptions.json'
+CONFIG_PATH = SCRIPT_DIR / 'ai-proxy.config.json'
+
+DEFAULT_PROXY_CONFIG: Dict[str, Any] = {
+    'api_key': '',
+    'api_endpoint': 'https://api.deepseek.com/chat/completions',
+    'api_provider': 'deepseek',
+}
+
+
+def load_proxy_config() -> Dict[str, Any]:
+    config = dict(DEFAULT_PROXY_CONFIG)
+
+    if not CONFIG_PATH.exists():
+        print(f"⚠️ 未找到配置文件: {CONFIG_PATH.name}")
+        return config
+
+    try:
+        with CONFIG_PATH.open('r', encoding='utf-8') as config_file:
+            loaded_config = json.load(config_file)
+        if not isinstance(loaded_config, dict):
+            raise ValueError('配置文件必须是 JSON 对象')
+    except Exception as config_error:
+        print(f"⚠️ 读取配置文件失败: {config_error}")
+        return config
+
+    for key in config:
+        value = loaded_config.get(key)
+        if isinstance(value, str):
+            config[key] = value.strip()
+
+    return config
+
+
+PROXY_CONFIG = load_proxy_config()
+API_KEY = PROXY_CONFIG['api_key']
+API_ENDPOINT = PROXY_CONFIG['api_endpoint']
+API_PROVIDER = PROXY_CONFIG['api_provider']
 
 try:
     KNOWLEDGE_BASE: Optional[RAGKnowledgeBase] = load_default_kb(str(KB_PATH))

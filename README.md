@@ -138,8 +138,13 @@
 
 ### 修改AI配置
 
--   **更换API密钥**: 如果您需要使用自己的通义千问API密钥，请修改 `scripts/ai-proxy.py` 文件中的 `API_KEY` 变量。
-    ```python
-    # 警告：在生产环境中，应使用更安全的方法（如环境变量）来管理密钥。
-    API_KEY = 'sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-    ```
+-   **更换API密钥**: 请编辑 `scripts/ai-proxy.config.json`，把 `api_key` 替换为您自己的通义千问或 DeepSeek 密钥。
+-   **注意**: 这个配置文件已经加入 `.gitignore`，不会被提交到仓库。
+
+        ```json
+        {
+            "api_key": "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "api_endpoint": "https://api.deepseek.com/chat/completions",
+            "api_provider": "deepseek"
+        }
+        ```

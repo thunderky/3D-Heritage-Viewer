@@ -59,33 +59,33 @@ const CONFIG = {
 // 交互模式及其UI配置
 const INTERACTION_MODES = {
     auto: {
-        base: '#00FF00',
+        base: '#d4af37',
         text: '#000000',
-        hand: new THREE.Color('#00FF00'),
+        hand: new THREE.Color('#d4af37'),
         instruction: '自动模式：单手五指=拖拽，单手二指=旋转，双手二指=缩放'
     },
     drag: {
-        base: '#00FFFF', // 按钮背景色
-        text: '#000000', // 按钮文字颜色
-        hand: new THREE.Color('#00FFFF'), // 手部辉光颜色
+        base: '#c9a030',
+        text: '#000000',
+        hand: new THREE.Color('#c9a030'),
         instruction: '捏合手指来抓取并移动模型'
     },
     rotate: {
-        base: '#FF00FF',
-        text: '#FFFFFF',
-        hand: new THREE.Color('#FF00FF'),
+        base: '#b8960f',
+        text: '#ffffff',
+        hand: new THREE.Color('#b8960f'),
         instruction: '捏合手指并左右移动手来旋转'
     },
     scale: {
-        base: '#FFFF00',
+        base: '#e6c34a',
         text: '#000000',
-        hand: new THREE.Color('#FFFF00'),
+        hand: new THREE.Color('#e6c34a'),
         instruction: '使用双手，两手捏合并调整手之间的距离来缩放'
     },
     fixed: {
-        base: '#808080',
-        text: '#FFFFFF',
-        hand: new THREE.Color('#808080'),
+        base: '#555555',
+        text: '#cccccc',
+        hand: new THREE.Color('#555555'),
         instruction: '固定模式：手势识别已禁用'
     }
 };
@@ -1716,11 +1716,13 @@ export class Game {
             if (modeKey === this.interactionMode) {
                 button.style.backgroundColor = modeConfig.base;
                 button.style.color = modeConfig.text;
-                button.style.boxShadow = '1px 1px 0px black';
+                button.style.border = `2px solid ${modeConfig.base}`;
+                button.style.boxShadow = '1px 1px 0px rgba(0,0,0,0.5)';
             } else {
-                button.style.backgroundColor = 'rgba(255, 255, 255, 0.5)';
+                button.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
                 button.style.color = modeConfig.base;
-                button.style.boxShadow = '2px 2px 0px black';
+                button.style.border = `2px solid ${modeConfig.base}`;
+                button.style.boxShadow = '2px 2px 0px rgba(0,0,0,0.5)';
             }
         }
 

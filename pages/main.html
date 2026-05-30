@@ -25,8 +25,8 @@
         body {
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #f5f5f5;
+            font-family: '楷体', 'KaiTi', 'STKaiti', serif;
+            background: black;
             overflow-x: hidden;
         }
 
@@ -43,26 +43,30 @@
         /* 左侧边栏 - 相关介绍 */
         .left-sidebar {
             width: 280px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            border: 2px solid #d4af37;
             padding: 20px;
             overflow-y: auto;
+            backdrop-filter: blur(10px);
         }
 
         .sidebar-title {
-            color: #e74c3c;
+            color: #d4af37;
             font-size: 18px;
             font-weight: 600;
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #e74c3c;
+            border-bottom: 2px solid #d4af37;
+            font-family: '楷体', 'KaiTi', 'STKaiti', serif;
+            letter-spacing: 2px;
         }
 
         .narrate-btn {
-            border: 2px solid #4a90e2;
-            background: #4a90e2;
-            color: white;
+            border: 2px solid #d4af37;
+            background: linear-gradient(135deg, #d4af37 0%, #b8960f 100%);
+            color: #000;
             padding: 6px 12px;
             border-radius: 6px;
             font-size: 13px;
@@ -73,15 +77,14 @@
         }
 
         .narrate-btn:hover {
-            background: #357abd;
-            border-color: #357abd;
+            background: linear-gradient(135deg, #b8960f 0%, #d4af37 100%);
             transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(74, 144, 226, 0.4);
+            box-shadow: 0 2px 8px rgba(212, 175, 55, 0.4);
         }
 
         .narrate-btn.speaking {
-            background: #e74c3c;
-            border-color: #e74c3c;
+            background: #d4af37;
+            border-color: #ffd700;
             animation: pulse 1.5s infinite;
         }
 
@@ -93,12 +96,12 @@
         .model-description {
             font-size: 14px;
             line-height: 1.8;
-            color: #555;
+            color: #cccccc;
         }
 
         .model-description h4 {
             margin: 15px 0 8px 0;
-            color: #2c3e50;
+            color: #d4af37;
             font-size: 15px;
         }
 
@@ -109,7 +112,7 @@
         .model-meta {
             margin-top: 15px;
             padding-top: 15px;
-            border-top: 1px solid #eee;
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
         }
 
         /* 语音控制按钮 */
@@ -156,23 +159,24 @@
         }
 
         .meta-label {
-            color: #888;
+            color: #999;
         }
 
         .meta-value {
-            color: #2c3e50;
+            color: #d4af37;
             font-weight: 500;
         }
 
         /* 中间3D展示区域 */
         .center-viewer {
             flex: 1;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            border: 2px solid #d4af37;
             position: relative;
             overflow: hidden;
-            min-width: 0; /* 防止flex item溢出 */
+            min-width: 0;
         }
 
         #renderDiv {
@@ -214,8 +218,8 @@
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(231, 76, 60, 0.9);
-            color: white;
+            background: rgba(212, 175, 55, 0.9);
+            color: #000;
             padding: 8px 20px;
             border-radius: 20px;
             font-size: 13px;
@@ -226,9 +230,9 @@
             position: absolute;
             bottom: 20px;
             left: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            border: 2px solid #e74c3c;
-            color: #e74c3c;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #d4af37;
+            color: #d4af37;
             padding: 10px 25px;
             border-radius: 6px;
             cursor: pointer;
@@ -239,8 +243,8 @@
         }
 
         .model-switch-btn:hover {
-            background: #e74c3c;
-            color: white;
+            background: #d4af37;
+            color: #000;
         }
 
         /* 右侧边栏 */
@@ -254,21 +258,25 @@
         .panel-title {
             font-size: 16px;
             font-weight: 600;
-            color: #2c3e50;
+            color: #d4af37;
             margin: 0 0 15px 0;
             padding-bottom: 10px;
-            border-bottom: 2px solid #eee;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.4);
+            font-family: '楷体', 'KaiTi', 'STKaiti', serif;
+            letter-spacing: 2px;
         }
 
         /* AI问答区域 */
         .ai-panel {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            border: 2px solid #d4af37;
             padding: 20px;
             display: flex;
             flex-direction: column;
             height: 400px;
+            backdrop-filter: blur(10px);
         }
 
         .ai-panel-header {
@@ -280,9 +288,9 @@
         }
 
         .ai-speech-toggle {
-            border: 1px solid #4a90e2;
-            background: rgba(74, 144, 226, 0.08);
-            color: #1f3b68;
+            border: 1px solid #d4af37;
+            background: rgba(212, 175, 55, 0.1);
+            color: #d4af37;
             padding: 6px 12px;
             border-radius: 999px;
             font-size: 12px;
@@ -295,10 +303,10 @@
         }
 
         .ai-speech-toggle.active {
-            background: #4a90e2;
-            color: white;
-            border-color: #4a90e2;
-            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.35);
+            background: #d4af37;
+            color: #000;
+            border-color: #d4af37;
+            box-shadow: 0 4px 10px rgba(212, 175, 55, 0.35);
         }
 
         .ai-speech-toggle:disabled {
@@ -323,20 +331,21 @@
         }
 
         .voice-selection-dialog {
-            background: white;
+            background: rgba(0, 0, 0, 0.95);
             border-radius: 12px;
+            border: 2px solid #d4af37;
             padding: 24px;
             max-width: 500px;
             width: 90%;
             max-height: 70vh;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
 
         .voice-selection-dialog h3 {
             margin: 0 0 16px 0;
-            color: #2c3e50;
+            color: #d4af37;
             font-size: 18px;
         }
 
@@ -344,9 +353,10 @@
             flex: 1;
             overflow-y: auto;
             margin-bottom: 16px;
-            border: 1px solid #e0e0e0;
+            border: 1px solid rgba(212, 175, 55, 0.3);
             border-radius: 8px;
             padding: 8px;
+            background: rgba(0, 0, 0, 0.5);
         }
 
         .voice-item {
@@ -359,13 +369,13 @@
         }
 
         .voice-item:hover {
-            background: #f0f7ff;
-            border-color: #4a90e2;
+            background: rgba(212, 175, 55, 0.1);
+            border-color: #d4af37;
         }
 
         .voice-item.selected {
-            background: #e3f2fd;
-            border-color: #4a90e2;
+            background: rgba(212, 175, 55, 0.15);
+            border-color: #d4af37;
         }
 
         .voice-info {
@@ -377,7 +387,7 @@
         .voice-name {
             font-size: 14px;
             font-weight: 600;
-            color: #2c3e50;
+            color: #d4af37;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -385,7 +395,7 @@
 
         .voice-lang {
             font-size: 12px;
-            color: #888;
+            color: #999;
         }
 
         .quality-badge {
@@ -450,8 +460,9 @@
             overflow-y: auto;
             margin-bottom: 15px;
             padding: 10px;
-            background: #f8f9fa;
+            background: rgba(0, 0, 0, 0.4);
             border-radius: 6px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
             min-height: 0;
         }
 
@@ -506,23 +517,25 @@
         }
 
         .ai-message.assistant {
-            background: white;
-            border: 1px solid #e0e0e0;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #cccccc;
             align-self: flex-start;
         }
 
         .ai-message.system {
-            background: #fff3cd;
-            border: 1px solid #ffc107;
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            color: #d4af37;
             align-self: center;
             font-size: 13px;
             text-align: center;
         }
 
         .ai-message.error {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid rgba(220, 53, 69, 0.4);
+            color: #f5c6cb;
         }
 
         .message-content {
@@ -545,27 +558,29 @@
         .ai-input {
             width: 100%;
             padding: 12px;
-            border: 1px solid #ddd;
+            border: 1px solid rgba(212, 175, 55, 0.3);
             border-radius: 6px;
             font-size: 14px;
             resize: vertical;
             min-height: 80px;
             max-height: 150px;
             font-family: inherit;
+            background: rgba(0, 0, 0, 0.5);
+            color: #cccccc;
             transition: border-color 0.3s;
         }
 
         .ai-input:focus {
             outline: none;
-            border-color: #4a90e2;
+            border-color: #d4af37;
         }
 
         .ai-submit-btn {
             width: 100%;
             padding: 10px;
-            background: #4a90e2;
-            color: white;
-            border: none;
+            background: linear-gradient(135deg, #d4af37 0%, #b8960f 100%);
+            color: #000;
+            border: 2px solid #d4af37;
             border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
@@ -574,11 +589,13 @@
         }
 
         .ai-submit-btn:hover:not(:disabled) {
-            background: #357abd;
+            background: linear-gradient(135deg, #b8960f 0%, #d4af37 100%);
         }
 
         .ai-submit-btn:disabled {
-            background: #ccc;
+            background: #555;
+            border-color: #555;
+            color: #999;
             cursor: not-allowed;
         }
 
@@ -604,14 +621,16 @@
 
         /* 评论区域 */
         .comments-panel {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            border: 2px solid #d4af37;
             padding: 20px;
             flex: 1;
             display: flex;
             flex-direction: column;
             min-height: 350px;
+            backdrop-filter: blur(10px);
         }
 
         .comment-input-area {
@@ -621,25 +640,27 @@
         .comment-input {
             width: 100%;
             padding: 10px;
-            border: 1px solid #ddd;
+            border: 1px solid rgba(212, 175, 55, 0.3);
             border-radius: 6px;
             font-size: 13px;
             resize: none;
             font-family: inherit;
+            background: rgba(0, 0, 0, 0.5);
+            color: #cccccc;
         }
 
         .comment-input:focus {
             outline: none;
-            border-color: #4a90e2;
+            border-color: #d4af37;
         }
 
         .comment-submit-btn {
             width: 100%;
             margin-top: 10px;
             padding: 10px;
-            background: #4a90e2;
-            color: white;
-            border: none;
+            background: linear-gradient(135deg, #d4af37 0%, #b8960f 100%);
+            color: #000;
+            border: 2px solid #d4af37;
             border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
@@ -648,7 +669,7 @@
         }
 
         .comment-submit-btn:hover {
-            background: #357abd;
+            background: linear-gradient(135deg, #b8960f 0%, #d4af37 100%);
         }
 
         .comments-list {
@@ -659,10 +680,10 @@
 
         .comment-item {
             padding: 12px;
-            background: #f8f9fa;
+            background: rgba(0, 0, 0, 0.4);
             border-radius: 6px;
             margin-bottom: 10px;
-            border-left: 3px solid #4a90e2;
+            border-left: 3px solid #d4af37;
         }
 
         .comment-header {
@@ -673,7 +694,7 @@
 
         .comment-author {
             font-weight: 600;
-            color: #2c3e50;
+            color: #d4af37;
             font-size: 13px;
         }
 
@@ -685,12 +706,12 @@
         .comment-content {
             font-size: 13px;
             line-height: 1.6;
-            color: #555;
+            color: #cccccc;
         }
 
         .no-comments {
             text-align: center;
-            color: #999;
+            color: #888;
             padding: 30px;
             font-size: 13px;
         }
@@ -715,13 +736,14 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: white;
+            background: rgba(0, 0, 0, 0.95);
             border-radius: 12px;
+            border: 2px solid #d4af37;
             padding: 30px;
             max-width: 800px;
             max-height: 80vh;
             overflow-y: auto;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
             animation: slideIn 0.3s;
         }
 
@@ -743,7 +765,7 @@
 
         .model-selection-card h3 {
             margin: 0 0 20px 0;
-            color: #2c3e50;
+            color: #d4af37;
         }
 
         .filter-section {
@@ -757,7 +779,7 @@
         .filter-group label {
             display: block;
             margin-bottom: 8px;
-            color: #555;
+            color: #d4af37;
             font-weight: 500;
             font-size: 14px;
         }
@@ -765,8 +787,9 @@
         .filter-btn {
             padding: 6px 15px;
             margin: 0 5px 5px 0;
-            border: 1px solid #ddd;
-            background: white;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            background: rgba(0, 0, 0, 0.6);
+            color: #cccccc;
             border-radius: 4px;
             cursor: pointer;
             font-size: 13px;
@@ -774,14 +797,14 @@
         }
 
         .filter-btn:hover {
-            border-color: #4a90e2;
-            color: #4a90e2;
+            border-color: #d4af37;
+            color: #d4af37;
         }
 
         .filter-btn.active {
-            background: #4a90e2;
-            color: white;
-            border-color: #4a90e2;
+            background: #d4af37;
+            color: #000;
+            border-color: #d4af37;
         }
 
         .model-list {
@@ -793,9 +816,11 @@
 
         .model-item {
             padding: 15px;
-            border: 2px solid #eee;
+            border: 2px solid rgba(212, 175, 55, 0.3);
             border-radius: 8px;
             text-align: center;
+            background: rgba(0, 0, 0, 0.5);
+            color: #cccccc;
             cursor: pointer;
             transition: all 0.3s;
             font-size: 14px;

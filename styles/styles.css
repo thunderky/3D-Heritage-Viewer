@@ -57,17 +57,38 @@
     justify-content: space-between;
     padding: 50px 20px;
     box-sizing: border-box;
-    background-color: #f8f8f8;
-    font-family: "Arial", "Helvetica Neue", Helvetica, sans-serif;
+    background: black;
+    font-family: '楷体', 'KaiTi', 'STKaiti', serif;
+    position: relative;
+}
+
+.welcome-screen::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="traditional" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="%23d4af37" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23traditional)"/></svg>');
+    opacity: 0.3;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.welcome-screen > * {
+    position: relative;
+    z-index: 1;
 }
 
 .welcome-title {
     font-size: 3rem;
     font-weight: bold;
     margin-bottom: 20px;
-    color: #333;
+    color: #ffffff;
     text-align: center;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-family: '楷体', 'KaiTi', 'STKaiti', serif;
+    letter-spacing: 4px;
 }
 
 .welcome-content {
@@ -79,7 +100,7 @@
 .welcome-content p {
     font-size: 1.2rem;
     margin-bottom: 20px;
-    color: #555;
+    color: #cccccc;
 }
 
 .feature-list {
@@ -2417,31 +2438,55 @@
 .tutorial-page .welcome-title,
 .settings-page .welcome-title {
     font-size: 3rem;
-    color: #8B0000;
-    text-shadow: 3px 3px 0px #FFD700;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     margin-bottom: 30px;
     font-weight: bold;
+    font-family: '楷体', 'KaiTi', 'STKaiti', serif;
+    letter-spacing: 4px;
+    position: relative;
+    display: inline-block;
+}
+
+.tutorial-page .welcome-title::after,
+.settings-page .welcome-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #d4af37, transparent);
+    border-radius: 2px;
 }
 
 /* Tutorial 页面样式 */
 .tutorial-section {
-    background: linear-gradient(to bottom, #FFF9E6 0%, #FFFFFF 100%);
-    border-radius: 8px;
-    border: 3px solid #8B0000;
-    box-shadow: 6px 6px 0px rgba(139, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 12px;
+    border: 2px solid #d4af37;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
     padding: 25px;
     margin-bottom: 25px;
     max-width: 900px;
     width: 100%;
+    backdrop-filter: blur(10px);
 }
 
 .tutorial-section h2 {
-    color: #8B0000;
+    color: #ffffff;
     margin-top: 0;
-    border-bottom: 3px solid #FFD700;
+    border-bottom: 2px solid #d4af37;
     padding-bottom: 12px;
     font-size: 1.8rem;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    font-family: '楷体', 'KaiTi', 'STKaiti', serif;
+    letter-spacing: 2px;
+}
+
+.tutorial-section > p {
+    color: #cccccc;
+    line-height: 1.8;
 }
 
 .tutorial-item {
@@ -2449,15 +2494,15 @@
     align-items: flex-start;
     margin-bottom: 15px;
     padding-bottom: 15px;
-    border-bottom: 2px dashed #FFD700;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
 }
 
 .tutorial-number {
     width: 40px;
     height: 40px;
-    background: linear-gradient(135deg, #DC143C 0%, #8B0000 100%);
-    color: #FFD700;
-    border: 2px solid #000;
+    background: linear-gradient(135deg, #d4af37 0%, #b8960f 100%);
+    color: #000;
+    border: 2px solid #d4af37;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -2466,7 +2511,7 @@
     font-size: 1.2rem;
     margin-right: 20px;
     flex-shrink: 0;
-    box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
 }
 
 .tutorial-content {
@@ -2476,22 +2521,22 @@
 .tutorial-content h3 {
     margin-top: 0;
     margin-bottom: 8px;
-    color: #8B0000;
+    color: #d4af37;
     font-size: 1.3rem;
 }
 
 .tutorial-content p {
     margin-top: 0;
-    color: #333;
+    color: #cccccc;
     line-height: 1.6;
 }
 
 .tutorial-image {
     max-width: 100%;
-    border: 3px solid #8B0000;
+    border: 2px solid #d4af37;
     border-radius: 4px;
     margin: 10px 0;
-    box-shadow: 3px 3px 6px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
 .gesture-container {
@@ -2502,41 +2547,43 @@
 }
 
 .gesture-card {
-    background: linear-gradient(to bottom, #FFF9E6 0%, #FFFAF0 100%);
-    border: 3px solid #DC143C;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #d4af37;
     border-radius: 8px;
     padding: 20px;
     width: calc(50% - 20px);
     box-sizing: border-box;
-    box-shadow: 4px 4px 0px rgba(139, 0, 0, 0.2);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
     transition: all 0.3s ease;
 }
 
 .gesture-card:hover {
     transform: translateY(-3px);
-    box-shadow: 5px 5px 0px rgba(139, 0, 0, 0.3);
+    box-shadow: 0 8px 24px rgba(212, 175, 55, 0.2);
+    border-color: #ffd700;
 }
 
 .gesture-card h4 {
     margin-top: 0;
-    color: #DC143C;
-    border-bottom: 2px solid #FFD700;
+    color: #d4af37;
+    border-bottom: 2px solid rgba(212, 175, 55, 0.4);
     padding-bottom: 8px;
     font-size: 1.2rem;
 }
 
 .gesture-card p {
     margin-bottom: 0;
-    color: #333;
+    color: #cccccc;
 }
 
 .tutorial-footer {
     margin-top: 40px;
     text-align: center;
     padding: 20px;
-    background: linear-gradient(to right, #FFF9E6 0%, #FFFAF0 50%, #FFF9E6 100%);
-    border: 3px solid #8B0000;
+    background: rgba(0, 0, 0, 0.85);
+    border: 2px solid #d4af37;
     border-radius: 8px;
+    backdrop-filter: blur(10px);
 }
 
 .action-button {
@@ -2573,23 +2620,26 @@
 .setting-item {
     margin: 20px 0;
     padding: 25px;
-    background: linear-gradient(to bottom, #FFF9E6 0%, #FFFFFF 100%);
-    border-radius: 8px;
-    border: 3px solid #8B0000;
-    box-shadow: 6px 6px 0px rgba(139, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 12px;
+    border: 2px solid #d4af37;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
 }
 
 .setting-title {
     font-size: 1.3rem;
     font-weight: bold;
     margin-bottom: 10px;
-    color: #8B0000;
-    border-bottom: 2px solid #FFD700;
+    color: #d4af37;
+    border-bottom: 2px solid rgba(212, 175, 55, 0.4);
     padding-bottom: 8px;
+    font-family: '楷体', 'KaiTi', 'STKaiti', serif;
+    letter-spacing: 2px;
 }
 
 .setting-description {
-    color: #333;
+    color: #cccccc;
     margin-bottom: 15px;
     line-height: 1.6;
 }
@@ -2614,10 +2664,10 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
+    background-color: #555;
     transition: .4s;
     border-radius: 34px;
-    border: 2px solid #000;
+    border: 2px solid #d4af37;
 }
 
 .toggle-slider:before {
@@ -2627,14 +2677,14 @@
     width: 26px;
     left: 4px;
     bottom: 2px;
-    background-color: white;
+    background-color: #ccc;
     transition: .4s;
     border-radius: 50%;
     box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 
 input:checked + .toggle-slider {
-    background-color: #DC143C;
+    background-color: #d4af37;
 }
 
 input:checked + .toggle-slider:before {
@@ -2644,11 +2694,11 @@ input:checked + .toggle-slider:before {
 #toggleStatus {
     margin-left: 15px;
     font-weight: bold;
-    color: #8B0000;
+    color: #d4af37;
 }
 
 .save-message {
-    color: #DC143C;
+    color: #d4af37;
     margin-top: 10px;
     display: none;
     font-weight: bold;
@@ -2663,7 +2713,7 @@ input:checked + .toggle-slider:before {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
-    color: #8B0000;
+    color: #d4af37;
 }
 
 .slider-row {
@@ -2676,12 +2726,12 @@ input:checked + .toggle-slider:before {
     flex-grow: 1;
     height: 8px;
     border-radius: 5px;
-    background: #FFD700;
+    background: rgba(212, 175, 55, 0.3);
     outline: none;
     -webkit-appearance: none;
     appearance: none;
     margin-right: 15px;
-    border: 2px solid #000;
+    border: 2px solid #d4af37;
 }
 
 .slider::-webkit-slider-thumb {
@@ -2690,50 +2740,50 @@ input:checked + .toggle-slider:before {
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #DC143C 0%, #8B0000 100%);
+    background: linear-gradient(135deg, #d4af37 0%, #b8960f 100%);
     cursor: pointer;
     border: 2px solid #000;
-    box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.4);
 }
 
 .slider::-moz-range-thumb {
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #DC143C 0%, #8B0000 100%);
+    background: linear-gradient(135deg, #d4af37 0%, #b8960f 100%);
     cursor: pointer;
     border: 2px solid #000;
-    box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.4);
 }
 
 .slider-value {
     width: 50px;
     text-align: center;
     font-weight: bold;
-    color: #8B0000;
+    color: #d4af37;
 }
 
 .save-btn {
     padding: 8px 15px;
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-    color: #8B0000;
-    border: 2px solid #000;
+    background: linear-gradient(135deg, #d4af37 0%, #b8960f 100%);
+    color: #000;
+    border: 2px solid #d4af37;
     border-radius: 4px;
     cursor: pointer;
     font-weight: bold;
-    box-shadow: 2px 2px 0px #000;
+    box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
     transition: all 0.3s;
 }
 
 .save-btn:hover {
-    background: linear-gradient(135deg, #FFA500 0%, #FFD700 100%);
+    background: linear-gradient(135deg, #b8960f 0%, #d4af37 100%);
     transform: translateY(-2px);
-    box-shadow: 3px 3px 0px #000;
+    box-shadow: 3px 3px 0px rgba(0,0,0,0.5);
 }
 
 .save-btn:active {
     transform: translateY(0);
-    box-shadow: 1px 1px 0px #000;
+    box-shadow: 1px 1px 0px rgba(0,0,0,0.5);
 }
 
 /* 响应式设计 */

@@ -1161,6 +1161,8 @@
                 const newEnabled = !currentEnabled;
                 localStorage.setItem('speechRecognitionEnabled', newEnabled ? 'true' : 'false');
                 updateButtonState();
+                // 通知同一页面的 SpeechManager 更新状态
+                window.dispatchEvent(new Event('speechRecognitionChange'));
             });
 
             // 监听其他标签页对localStorage的修改（如game.js中的状态同步）

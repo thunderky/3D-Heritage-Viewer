@@ -1481,6 +1481,11 @@ export class Game {
             }
         });
 
+        // 监听同一页面内语音控制按钮的切换
+        window.addEventListener('speechRecognitionChange', () => {
+            this.speechManager.updateSpeechRecognitionState();
+        });
+
         if (this.speechBubble) {
             this.speechBubble.innerHTML = "...";
             this.speechBubble.style.opacity = '0.7';

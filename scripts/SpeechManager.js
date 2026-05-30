@@ -150,6 +150,7 @@ export var SpeechManager = /*#__PURE__*/ function() {
         this.onRecognitionActive = onRecognitionActive;
         this.recognition = null;
         this.isRecognizing = false;
+        this._manuallyStopped = false;
         this.finalTranscript = '';
         this.interimTranscript = '';
         var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -204,6 +205,11 @@ export var SpeechManager = /*#__PURE__*/ function() {
                 _this.interimTranscript = '';
                 if (_this.onTranscript) _this.onTranscript('', '');
                 if (oldIsRecognizing && _this.onRecognitionActive) _this.onRecognitionActive(false);
+                // 如果是手动停止，不自动重启
+                if (_this._manuallyStopped) {
+                    _this._manuallyStopped = false;
+                    return;
+                }
                 if (_this.recognition.continuous) {
                     console.log('连续模式：重新启动语音识别。');
                     _this.startRecognition();
@@ -218,6 +224,7 @@ export var SpeechManager = /*#__PURE__*/ function() {
             key: "startRecognition",
             value: function startRecognition() {
                 var _this = this;
+                this._manuallyStopped = false;
                 if (this.recognition && !this.isRecognizing) {
                     try {
                         this.finalTranscript = '';
@@ -238,6 +245,7 @@ export var SpeechManager = /*#__PURE__*/ function() {
             key: "stopRecognition",
             value: function stopRecognition() {
                 if (this.recognition && this.isRecognizing) {
+                    this._manuallyStopped = true;
                     this.recognition.stop();
                 }
             }

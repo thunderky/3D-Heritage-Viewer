@@ -112,6 +112,42 @@
             border-top: 1px solid #eee;
         }
 
+        /* 语音控制按钮 */
+        .voice-control-btn {
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 700;
+            border: 2px solid #000;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 2px 2px 0px #000;
+            color: white;
+        }
+
+        .voice-control-btn.enabled {
+            background: #28a745;
+            border-color: #1e7e34;
+        }
+
+        .voice-control-btn.enabled:hover {
+            background: #218838;
+            transform: translateY(-1px);
+            box-shadow: 3px 3px 0px #000;
+        }
+
+        .voice-control-btn.disabled {
+            background: #6c757d;
+            border-color: #545b62;
+        }
+
+        .voice-control-btn.disabled:hover {
+            background: #5a6268;
+            transform: translateY(-1px);
+            box-shadow: 3px 3px 0px #000;
+        }
+
         .meta-item {
             display: flex;
             justify-content: space-between;
@@ -852,12 +888,19 @@
         <main class="center-viewer">
             <div id="renderDiv">
                 <!--<div class="camera-label">摄像头区域</div>-->
-                <button class="model-switch-btn" id="selectModelBtn">切换模型</button>
+                <button class="model-switch-btn" id="selectModelBtn">切换文物</button>
             </div>
         </main>
 
         <!-- 右侧边栏 -->
         <aside class="right-sidebar">
+            <!-- 语音控制按钮 -->
+            <div style="margin-bottom: 12px; text-align: center;">
+                <button id="voiceControlBtn" class="voice-control-btn" type="button" title="点击开启或关闭语音控制">
+                    🎤 语音控制：已开启
+                </button>
+            </div>
+
             <!-- AI问答区域 -->
             <div class="ai-panel">
                 <div class="ai-panel-header">
@@ -1066,7 +1109,44 @@
             window.descriptionNarrator = new DescriptionNarrator();
         }
     </script>
-    
+
+    <!-- 语音控制按钮逻辑 -->
+    <script>
+        (function() {
+            const voiceControlBtn = document.getElementById('voiceControlBtn');
+            if (!voiceControlBtn) return;
+
+            function updateButtonState() {
+                const enabled = localStorage.getItem('speechRecognitionEnabled') !== 'false';
+                if (enabled) {
+                    voiceControlBtn.className = 'voice-control-btn enabled';
+                    voiceControlBtn.innerHTML = '🎤 语音控制：已开启';
+                } else {
+                    voiceControlBtn.className = 'voice-control-btn disabled';
+                    voiceControlBtn.innerHTML = '🎤 语音控制：已关闭';
+                }
+            }
+
+            // 初始化按钮状态
+            updateButtonState();
+
+            // 点击按钮切换语音控制
+            voiceControlBtn.addEventListener('click', function() {
+                const currentEnabled = localStorage.getItem('speechRecognitionEnabled') !== 'false';
+                const newEnabled = !currentEnabled;
+                localStorage.setItem('speechRecognitionEnabled', newEnabled ? 'true' : 'false');
+                updateButtonState();
+            });
+
+            // 监听其他标签页对localStorage的修改（如game.js中的状态同步）
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'speechRecognitionEnabled') {
+                    updateButtonState();
+                }
+            });
+        })();
+    </script>
+
     <script type="module">
         // 确保渲染器在布局完成后正确调整大小
         window.addEventListener('load', () => {

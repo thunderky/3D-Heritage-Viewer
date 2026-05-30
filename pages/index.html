@@ -36,47 +36,7 @@
         </nav>
         
         <!-- 首页主体 -->
-        <div class="museum-homepage">
-            <!-- 顶部横幅 -->
-            <section class="museum-header" style="
-                position: relative;
-                height: 80vh;
-                background-color: #000;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                overflow: hidden;
-            ">
-                <video 
-                    autoplay 
-                    muted 
-                    loop 
-                    style="
-                        width: 100%;
-                        height: 100%;
-                        object-fit: contain;
-                        background-color: #000;
-                    "
-                >
-                    <source src="../media/video.mp4" type="video/mp4">
-                    您的浏览器不支持视频播放。
-                </video>
-                <div style="
-                    position: absolute;
-                    bottom: 20px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    text-align: center;
-                    color: white;
-                    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-                    z-index: 10;
-                    pointer-events: none;
-                ">
-                </div>
-            </section>
-
-        
-
+        <div class="museum-homepage" style="padding-top: 80px;">
             <!-- 引入文字 -->
             <section class="heritage-introduction">
                 <div class="intro-container">
@@ -114,86 +74,33 @@
          
 
                 
-            <!-- 公告栏 -->
-            <section class="announcement-bar">
-                <div class="announcement-content">
-                    <div class="announcement-text">
-                        <span class="announcement-dot">●</span>
-                        <span>若需要投稿个人藏品，请查看投稿须知后发送邮件至contact@digitalmuseum.cn</span>
-                        <span class="announcement-date">2025/10/12</span>
-                        <span class="announcement-dot">●</span>
-                    
-                    </div>
-                </div>
+
+
+
+            <!-- 首页视频 -->
+            <section style="
+                background-color: #000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 40px 0;
+            ">
+                <video 
+                    autoplay 
+                    muted 
+                    loop 
+                    style="
+                        width: 80%;
+                        max-width: 1200px;
+                        object-fit: contain;
+                        background-color: #000;
+                    "
+                >
+                    <source src="../media/video.mp4" type="video/mp4">
+                    您的浏览器不支持视频播放。
+                </video>
             </section>
 
-    <!-- 博物馆信息 -->
-            <section class="museum-info">
-                <div class="info-container">
-                    <div class="opening-hours">
-                        <h3>投稿时间</h3>
-                        <div class="time-info">
-                            <span class="time-main">工作日 09:00 — 16:30 </span>
-                            <p class="time-note">投稿邮箱:contact@digitalmuseum.cn</p>
-                        </div>
-                    </div>
-                  
-                    <div class="service-buttons">
-                        <button class="service-btn">投稿须知</button>
-                        <button class="service-btn">藏主服务</button>
-                    </div>
-                </div>
-            </section>
-
-
-            <!-- 页脚 -->
-            <footer class="museum-footer">
-                <div class="footer-content">
-                    <div class="footer-main">
-                        <!-- 博物馆信息 -->
-                        <div class="footer-section">
-                            <h4>关于我们</h4>
-                            <p>中国数字博物馆致力于传承华夏文明，弘扬民族文化，运用先进的3D技术和人工智能，为全球用户提供沉浸式的文物展示体验。</p>
-                            <p>我们的使命是让珍贵的文化遗产通过数字化技术得以永久保存和传播。</p>
-                        </div>
-                        
-                        <!-- 联系方式 -->
-                        <div class="footer-section">
-                            <h4>联系我们</h4>
-                            <div class="contact-info">
-                                <p><span class="contact-icon">📧</span> 邮箱：contact@digitalmuseum.cn</p>
-                                <p><span class="contact-icon">📞</span> 电话：+86 010-12345678</p>
-                                <p><span class="contact-icon">📍</span> 地址：上海市嘉定区数字文化园区</p>
-                                <p><span class="contact-icon">💼</span> 合作：contact@digitalmuseum.cn</p>
-                            </div>
-                        </div>
-                        
-                        <!-- 快速链接 -->
-                        <div class="footer-section">
-                            <h4>快速链接</h4>
-                            <div class="footer-links">
-                                <a href="#" class="footer-link" data-action="submission">文物投稿</a>
-                                <a href="#" class="footer-link" data-action="tutorial">使用指南</a>
-                                <a href="#" class="footer-link" data-action="privacy">隐私政策</a>
-                                <a href="#" class="footer-link" data-action="terms">服务条款</a>
-                                <a href="#" class="footer-link" data-action="support">技术支持</a>
-                                <a href="#" class="footer-link" data-action="feedback">意见反馈</a>
-                            </div>
-                        </div>
-                        
-                      
-                    </div>
-                    
-                    <!-- 底部版权信息 -->
-                    <div class="footer-bottom">
-                        <div class="copyright">
-                            <p>&copy; 2025 中国数字博物馆 版权所有 | China Digital Museum. All rights reserved.</p>
-                            <p>技术支持：3D Heritage Tech</p>
-                        </div>
-                       
-                    </div>
-                </div>
-            </footer>
         </div>
 
         <script type="module">
@@ -379,50 +286,6 @@
                 window.location.href = 'tutorial.html';
             });
 
-            // 动态文字大小效果
-            function updateTextSizes() {
-                const paragraphs = document.querySelectorAll('.heritage-introduction .intro-text p');
-                console.log('找到段落数量:', paragraphs.length); // 调试信息
-                
-                if (paragraphs.length === 0) return; // 如果没有找到段落就退出
-                
-                const viewportHeight = window.innerHeight;
-                const viewportCenter = viewportHeight / 2;
-                
-                paragraphs.forEach((p, index) => {
-                    const rect = p.getBoundingClientRect();
-                    const elementCenter = rect.top + rect.height / 2;
-                    
-                    // 计算元素中心与视口中心的距离
-                    const distanceFromCenter = Math.abs(elementCenter - viewportCenter);
-                    const maxDistance = viewportHeight / 2;
-                    
-                    // 计算缩放比例 (0到1之间)
-                    let scale = Math.max(0, 1 - (distanceFromCenter / maxDistance));
-                    
-                    // 增强效果，让变化更明显
-                    scale = Math.pow(scale, 0.5); // 使用平方根让变化更平缓
-                    
-                    // 根据距离调整字体大小 (0.9rem 到 1.6rem)
-                    const minSize = 0.9;
-                    const maxSize = 1.2;
-                    const fontSize = minSize + (maxSize - minSize) * scale;
-                    
-                    // 应用字体大小和透明度效果
-                    p.style.fontSize = fontSize + 'rem';
-                    p.style.opacity = 0.5 + 0.5 * scale; // 透明度从0.5到1
-                    
-                    // 添加轻微的变换效果
-                    const translateY = (1 - scale) * 15; // 最多向上偏移15px
-                    p.style.transform = `translateY(${translateY}px)`;
-                    
-                    // 调试信息（只为第一个段落输出）
-                    if (index === 0) {
-                        console.log('段落位置:', rect.top, '中心:', elementCenter, '距离:', distanceFromCenter, '缩放:', scale, '字体:', fontSize);
-                    }
-                });
-            }
-
             // 添加滚动效果
             window.addEventListener('scroll', function() {
                 const nav = document.querySelector('.homepage-nav');
@@ -433,39 +296,6 @@
                     nav.style.background = 'rgba(255, 255, 255, 0.9)';
                     nav.style.backdropFilter = 'none';
                 }
-                
-                // 更新文字大小
-                updateTextSizes();
-            });
-
-            // 使用requestAnimationFrame优化性能
-            let ticking = false;
-            function requestTick() {
-                if (!ticking) {
-                    requestAnimationFrame(updateTextSizes);
-                    ticking = true;
-                }
-            }
-
-            // 滚动事件优化版本
-            window.addEventListener('scroll', function() {
-                requestTick();
-                ticking = false;
-            });
-
-            // 页面加载时初始化文字大小
-            window.addEventListener('load', function() {
-                console.log('页面加载完成，初始化文字大小');
-                updateTextSizes();
-            });
-            
-            // 窗口大小改变时重新计算
-            window.addEventListener('resize', updateTextSizes);
-
-            // DOM内容加载完成后也执行一次
-            document.addEventListener('DOMContentLoaded', function() {
-                console.log('DOM加载完成');
-                setTimeout(updateTextSizes, 100); // 延迟100ms确保样式已应用
             });
 
             // 浮动文物动画
@@ -571,248 +401,6 @@
                 }
             };
 
-            // 页脚链接弹窗数据
-            const footerModalData = {
-                'submission': {
-                    title: '文物投稿',
-                    content: `
-                        <div class="modal-info">
-                            <h4>📤 文物投稿指南</h4>
-                            <p>感谢您对中华文化遗产保护事业的贡献！我们诚挚邀请您将珍贵的文物资源分享给我们。</p>
-
-                            <div class="submission-process">
-                                <h5>📋 投稿流程</h5>
-                                <ol>
-                                    <li>准备高清文物图片和相关信息</li>
-                                    <li>发送至指定投稿邮箱</li>
-                                    <li>我们的专家团队进行审核</li>
-                                    <li>审核通过后永久展示在数字博物馆中</li>
-                                </ol>
-                            </div>
-
-                            <div class="contact-section">
-                                <h5>📞 联系我们</h5>
-                                <p><span class="highlight">投稿邮箱：</span>contact@digitalmuseum.cn</p>
-                                <p><span class="highlight">咨询电话：</span>+86 010-12345678</p>
-                                <p><span class="highlight">工作时间：</span>周一至周五 9:00-17:00</p>
-                            </div>
-
-                            <div class="notice">
-                                <p>⚠️ <strong>重要提示：</strong>所有投稿材料须保证真实性并拥有合法使用权。我们将对所有投稿内容进行严格审核。</p>
-                            </div>
-                        </div>
-                    `
-                },
-                'privacy': {
-                    title: '隐私政策',
-                    content: `
-                        <div class="modal-info">
-                            <h4>🔒 隐私政策</h4>
-                            <p>中国数字博物馆（以下简称"我们"）非常重视用户的隐私保护。本隐私政策将向您说明我们如何收集、使用、存储和保护您的个人信息。</p>
-
-                            <h5>📊 信息收集</h5>
-                            <p>我们可能会收集以下信息：</p>
-                            <ul>
-                                <li>基本信息：姓名、联系方式等</li>
-                                <li>使用信息：浏览记录、交互数据等</li>
-                                <li>设备信息：IP地址、浏览器类型等</li>
-                            </ul>
-
-                            <h5>🎯 信息使用</h5>
-                            <p>我们收集的信息将用于：</p>
-                            <ul>
-                                <li>提供更好的用户体验</li>
-                                <li>改进我们的服务质量</li>
-                                <li>保护平台安全</li>
-                                <li>法律法规要求的合规用途</li>
-                            </ul>
-
-                            <h5>🔐 信息保护</h5>
-                            <p>我们采用业界领先的安全措施保护您的个人信息，包括数据加密、访问控制等。</p>
-
-                            <div class="contact-section">
-                                <h5>📞 联系我们</h5>
-                                <p>如果您对隐私政策有任何疑问，请联系我们：</p>
-                                <p><span class="highlight">邮箱：</span>contact@digitalmuseum.cn</p>
-                            </div>
-                        </div>
-                    `
-                },
-                'terms': {
-                    title: '服务条款',
-                    content: `
-                        <div class="modal-info">
-                            <h4>📜 服务条款</h4>
-                            <p>欢迎使用中国数字博物馆服务。本服务条款规定了您使用我们服务的权利和义务。</p>
-
-                            <h5>✅ 用户责任</h5>
-                            <ul>
-                                <li>遵守法律法规和平台规则</li>
-                                <li>保护账户安全，不得泄露给他人</li>
-                                <li>上传内容须真实、合法、有版权</li>
-                                <li>不得进行任何损害平台的行为</li>
-                            </ul>
-
-                            <h5>🚫 禁止行为</h5>
-                            <ul>
-                                <li>上传违法、侵权或不当内容</li>
-                                <li>进行网络攻击或破坏活动</li>
-                                <li>冒充他人或机构</li>
-                                <li>侵犯他人隐私权</li>
-                            </ul>
-
-                            <h5>⚖️ 知识产权</h5>
-                            <p>平台上的数字文物资源受版权保护。用户上传的内容须保证拥有合法使用权。</p>
-
-                            <h5>🔄 服务变更</h5>
-                            <p>我们保留随时修改或终止服务的权利，将提前通知用户。</p>
-
-                            <div class="contact-section">
-                                <h5>📞 联系我们</h5>
-                                <p>如有条款相关问题，请联系：</p>
-                                <p><span class="highlight">邮箱：</span>contact@digitalmuseum.cn</p>
-                            </div>
-                        </div>
-                    `
-                },
-                'support': {
-                    title: '技术支持',
-                    content: `
-                        <div class="modal-info">
-                            <h4>🛠️ 技术支持</h4>
-                            <p>我们致力于为您提供优质的技术支持服务。我们的数字博物馆采用了先进的技术架构。</p>
-
-                            <h5>💻 核心技术栈</h5>
-                            <div class="tech-stack">
-                                <div class="tech-item">
-                                    <h6>🎮 3D渲染引擎</h6>
-                                    <p><strong>Three.js</strong> - 业界领先的WebGL 3D渲染库</p>
-                                </div>
-                                <div class="tech-item">
-                                    <h6>🤖 AI手势识别</h6>
-                                    <p><strong>MediaPipe</strong> - Google的计算机视觉和机器学习解决方案</p>
-                                </div>
-                                <div class="tech-item">
-                                    <h6>🎤 语音交互</h6>
-                                    <p><strong>Web Speech API</strong> - 浏览器原生语音识别和合成API</p>
-                                </div>
-                                <div class="tech-item">
-                                    <h6>📱 前端框架</h6>
-                                    <p><strong>HTML5 Canvas</strong> - 用于实时视觉反馈和交互界面</p>
-                                </div>
-                            </div>
-
-                            <h5>🔧 支持内容</h5>
-                            <ul>
-                                <li>3D模型加载和渲染问题</li>
-                                <li>手势识别和语音控制功能</li>
-                                <li>浏览器兼容性问题</li>
-                                <li>性能优化建议</li>
-                            </ul>
-
-                            <div class="contact-section">
-                                <h5>📞 获取帮助</h5>
-                                <p><span class="highlight">技术支持邮箱：</span>contact@digitalmuseum.cn</p>
-                                <p><span class="highlight">紧急热线：</span>+86 010-12345678</p>
-                                <p><span class="highlight">响应时间：</span>工作日 9:00-18:00</p>
-                            </div>
-                        </div>
-                    `
-                },
-                'feedback': {
-                    title: '意见反馈',
-                    content: `
-                        <div class="modal-info">
-                            <h4>💬 意见反馈</h4>
-                            <p>您的宝贵意见是我们不断改进的重要动力。我们非常重视每一位用户的反馈。</p>
-
-                            <h5>📝 反馈类型</h5>
-                            <ul>
-                                <li>功能建议和改进意见</li>
-                                <li>使用体验问题反馈</li>
-                                <li>技术故障报告</li>
-                                <li>内容相关建议</li>
-                                <li>其他宝贵意见</li>
-                            </ul>
-
-                            <h5>📧 反馈方式</h5>
-                            <p>请将您的反馈发送至我们的专用邮箱，我们会在收到反馈后尽快回复。</p>
-
-                            <div class="contact-section">
-                                <h5>📞 联系我们</h5>
-                                <p><span class="highlight">意见反馈邮箱：</span>feedback@digitalmuseum.cn</p>
-                                <p><span class="highlight">客服热线：</span>+86 010-12345678</p>
-                                <p><span class="highlight">工作时间：</span>周一至周五 9:00-17:00</p>
-                            </div>
-
-                            <div class="feedback-notice">
-                                <p>💡 <strong>温馨提示：</strong>为了更好地为您解决问题，请在反馈中详细描述问题现象、使用环境和期望的解决方案。</p>
-                            </div>
-                        </div>
-                    `
-                },
-                'collector-service': {
-                    title: '藏主服务',
-                    content: `
-                        <div class="modal-info">
-                            <h4>👑 藏主服务</h4>
-                            <p>我们为文物收藏家提供全方位、专业化的服务，帮助您更好地管理和传承珍贵文物。</p>
-
-                            <div class="service-process">
-                                <h5>📋 服务内容</h5>
-                                <ul>
-                                    <li>文物鉴定与评估服务</li>
-                                    <li>收藏策略咨询与建议</li>
-                                    <li>保管环境优化指导</li>
-                                    <li>保险与风险管理方案</li>
-                                    <li>家族传承规划服务</li>
-                                    <li>市场行情分析报告</li>
-                                </ul>
-                            </div>
-
-                            <div class="service-benefits">
-                                <h5>🎯 服务优势</h5>
-                                <ul>
-                                    <li>汇聚国内外顶级鉴定专家</li>
-                                    <li>采用先进科技辅助鉴定</li>
-                                    <li>提供个性化收藏建议</li>
-                                    <li>确保文物安全与保值</li>
-                                </ul>
-                            </div>
-
-                            <div class="contact-section">
-                                <h5>📞 联系我们</h5>
-                                <p><span class="highlight">服务热线：</span>+86 010-12345678</p>
-                                <p><span class="highlight">专家邮箱：</span>collector@digitalmuseum.cn</p>
-                                <p><span class="highlight">预约时间：</span>周一至周五 9:00-17:00</p>
-                            </div>
-
-                            <div class="notice">
-                                <p>⚠️ <strong>重要提示：</strong>我们的服务严格遵守文物保护法律法规，为您的收藏提供专业保障。所有鉴定结果仅供参考。</p>
-                            </div>
-                        </div>
-                    `
-                }
-            };
-
-            // 显示页脚链接弹窗
-            function showFooterModal(type) {
-                const data = footerModalData[type];
-                if (!data) return;
-
-                modalTitle.textContent = data.title;
-                modalContent.innerHTML = data.content;
-                collectionModal.style.display = 'block';
-
-                // 防止背景滚动
-                document.body.style.overflow = 'hidden';
-
-                // 添加动画效果
-                setTimeout(() => {
-                    collectionModal.classList.add('active');
-                }, 10);
-            }
-
             // 显示蒙版弹窗
             function showCollectionModal(type) {
                 const data = collectionData[type];
@@ -863,51 +451,6 @@
                     });
                 });
 
-            // 为页脚快速链接添加点击事件
-                const footerLinks = document.querySelectorAll('.footer-link');
-
-                footerLinks.forEach(link => {
-                    link.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        const action = this.getAttribute('data-action');
-
-                        switch(action) {
-                            case 'submission':
-                                showFooterModal('submission');
-                                break;
-                            case 'tutorial':
-                                window.location.href = 'tutorial.html';
-                                break;
-                            case 'privacy':
-                                showFooterModal('privacy');
-                                break;
-                            case 'terms':
-                                showFooterModal('terms');
-                                break;
-                            case 'support':
-                                showFooterModal('support');
-                                break;
-                            case 'feedback':
-                                showFooterModal('feedback');
-                                break;
-                        }
-                    });
-                });
-
-                // 为服务按钮添加点击事件
-                const serviceButtons = document.querySelectorAll('.service-btn');
-
-                serviceButtons.forEach(button => {
-                    button.addEventListener('click', function() {
-                        const buttonText = this.textContent.trim();
-                        
-                        if (buttonText === '投稿须知') {
-                            showFooterModal('submission');
-                        } else if (buttonText === '藏主服务') {
-                            showFooterModal('collector-service');
-                        }
-                    });
-                });
             });
         </script>
     </body>

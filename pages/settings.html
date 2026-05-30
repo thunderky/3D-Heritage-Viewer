@@ -27,17 +27,6 @@
         <div class="welcome-screen" style="justify-content: flex-start; overflow-y: auto; height: auto; min-height: 100vh; padding-top: 120px; padding-bottom: 50px;">
             <div class="welcome-title">系统设置</div>
               <div class="welcome-content" style="max-width: 900px; width: 100%;">
-                <div class="setting-item">
-                    <div class="setting-title">🎤 语音识别功能</div>
-                    <div class="setting-description">控制是否启用语音命令识别功能。关闭后将不再响应语音命令。</div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="speechRecognitionToggle">
-                        <span class="toggle-slider"></span>
-                    </label>
-                    <span id="toggleStatus">已启用</span>
-                    <div id="saveMessage" class="save-message">设置已保存！</div>
-                </div>
-                
                 <!-- 缩放灵敏度设置 -->
                 <div class="setting-item">
                     <div class="setting-title">👋 手势灵敏度设置</div>
@@ -46,16 +35,16 @@
                     <div class="slider-container">
                         <label for="scaleSlider">缩放灵敏度</label>
                         <div class="slider-row">
-                            <input type="range" min="0.05" max="0.5" step="0.01" class="slider" id="scaleSlider">
-                            <span class="slider-value" id="scaleValue">0.2</span>
+                            <input type="range" min="0.1" max="6.0" step="0.1" class="slider" id="scaleSlider">
+                            <span class="slider-value" id="scaleValue">1.5</span>
                             <button class="save-btn" id="saveScaleBtn">保存</button>
                         </div>
                         <div class="setting-description">
-                            调整捏合手势的缩放响应程度（较高值使小幅度捏合产生更大缩放效果）
+                            调整缩放响应程度（较高值使小幅度捏合或滚轮产生更大缩放效果）
                         </div>
                         <div id="scaleMessage" class="save-message">缩放灵敏度设置已保存！</div>
                     </div>
-                    
+
                     <div class="slider-container">
                         <label for="rotateSlider">旋转灵敏度</label>
                         <div class="slider-row">
@@ -64,63 +53,61 @@
                             <button class="save-btn" id="saveRotateBtn">保存</button>
                         </div>
                         <div class="setting-description">
-                            控制旋转手势的响应灵敏度（较高值使手腕小角度旋转产生更大旋转效果）
+                            控制旋转响应灵敏度（较高值使小角度旋转产生更大旋转效果）
                         </div>
                         <div id="rotateMessage" class="save-message">旋转灵敏度设置已保存！</div>
+                    </div>
+                </div>
+
+                <!-- 鼠标灵敏度设置 -->
+                <div class="setting-item">
+                    <div class="setting-title">🖱️ 鼠标灵敏度设置</div>
+                    <div class="setting-description">调整鼠标拖拽平移和滚轮缩放的灵敏度参数。</div>
+
+                    <div class="slider-container">
+                        <label for="mouseDragSlider">鼠标拖拽灵敏度</label>
+                        <div class="slider-row">
+                            <input type="range" min="0.1" max="3.0" step="0.1" class="slider" id="mouseDragSlider">
+                            <span class="slider-value" id="mouseDragValue">1.0</span>
+                            <button class="save-btn" id="saveMouseDragBtn">保存</button>
+                        </div>
+                        <div class="setting-description">
+                            控制鼠标拖拽平移文物的速度（较高值使鼠标移动产生更大的平移效果）
+                        </div>
+                        <div id="mouseDragMessage" class="save-message">鼠标拖拽灵敏度设置已保存！</div>
+                    </div>
+
+                    <div class="slider-container">
+                        <label for="mouseWheelSlider">滚轮缩放灵敏度</label>
+                        <div class="slider-row">
+                            <input type="range" min="0.1" max="30" step="0.1" class="slider" id="mouseWheelSlider">
+                            <span class="slider-value" id="mouseWheelValue">10</span>
+                            <button class="save-btn" id="saveMouseWheelBtn">保存</button>
+                        </div>
+                        <div class="setting-description">
+                            控制鼠标滚轮缩放文物的速度（较高值使滚轮滚动产生更大的缩放效果）
+                        </div>
+                        <div id="mouseWheelMessage" class="save-message">滚轮缩放灵敏度设置已保存！</div>
                     </div>
                 </div>
             </div>
         </div>        <script>
             // 加载已保存的设置
             document.addEventListener('DOMContentLoaded', function() {
-                // 语音识别设置
-                const speechEnabled = localStorage.getItem('speechRecognitionEnabled');
-                const toggle = document.getElementById('speechRecognitionToggle');
-                const statusText = document.getElementById('toggleStatus');
-                
-                // 默认启用语音识别，除非明确设置为 "false"
-                if (speechEnabled === 'false') {
-                    toggle.checked = false;
-                    statusText.textContent = '已禁用';
-                } else {
-                    toggle.checked = true;
-                    statusText.textContent = '已启用';
-                }
-                
-                // 添加开关切换事件
-                toggle.addEventListener('change', function() {
-                    if (this.checked) {
-                        localStorage.setItem('speechRecognitionEnabled', 'true');
-                        statusText.textContent = '已启用';
-                    } else {
-                        localStorage.setItem('speechRecognitionEnabled', 'false');
-                        statusText.textContent = '已禁用';
-                    }
-                    
-                    // 显示保存消息
-                    const saveMessage = document.getElementById('saveMessage');
-                    saveMessage.style.display = 'block';
-                    
-                    // 2秒后隐藏保存消息
-                    setTimeout(function() {
-                        saveMessage.style.display = 'none';
-                    }, 2000);
-                });
-                
                 // 加载缩放灵敏度设置
                 const scaleSlider = document.getElementById('scaleSlider');
                 const scaleValue = document.getElementById('scaleValue');
                 const saveScaleBtn = document.getElementById('saveScaleBtn');
                 const scaleMessage = document.getElementById('scaleMessage');
                 
-                // 默认缩放灵敏度为0.2，除非有保存的设置
+                // 默认缩放灵敏度为1.0，除非有保存的设置
                 const savedScaleSensitivity = localStorage.getItem('scaleSensitivity');
                 if (savedScaleSensitivity) {
                     scaleSlider.value = savedScaleSensitivity;
                     scaleValue.textContent = savedScaleSensitivity;
                 } else {
-                    scaleSlider.value = 0.2; // 默认值
-                    scaleValue.textContent = '0.2';
+                    scaleSlider.value = 1.5; // 默认值
+                    scaleValue.textContent = '1.5';
                 }
                 
                 // 滑块值变化时更新显示
@@ -163,11 +150,65 @@
                 // 保存旋转灵敏度设置
                 saveRotateBtn.addEventListener('click', function() {
                     localStorage.setItem('rotateSensitivity', rotateSlider.value);
-                    
+
                     // 显示保存成功消息
                     rotateMessage.style.display = 'block';
                     setTimeout(function() {
                         rotateMessage.style.display = 'none';
+                    }, 2000);
+                });
+
+                // 加载鼠标拖拽灵敏度设置
+                const mouseDragSlider = document.getElementById('mouseDragSlider');
+                const mouseDragValue = document.getElementById('mouseDragValue');
+                const saveMouseDragBtn = document.getElementById('saveMouseDragBtn');
+                const mouseDragMessage = document.getElementById('mouseDragMessage');
+
+                const savedMouseDragSensitivity = localStorage.getItem('mouseDragSensitivity');
+                if (savedMouseDragSensitivity) {
+                    mouseDragSlider.value = savedMouseDragSensitivity;
+                    mouseDragValue.textContent = savedMouseDragSensitivity;
+                } else {
+                    mouseDragSlider.value = 1.0;
+                    mouseDragValue.textContent = '1.0';
+                }
+
+                mouseDragSlider.addEventListener('input', function() {
+                    mouseDragValue.textContent = this.value;
+                });
+
+                saveMouseDragBtn.addEventListener('click', function() {
+                    localStorage.setItem('mouseDragSensitivity', mouseDragSlider.value);
+                    mouseDragMessage.style.display = 'block';
+                    setTimeout(function() {
+                        mouseDragMessage.style.display = 'none';
+                    }, 2000);
+                });
+
+                // 加载滚轮缩放灵敏度设置
+                const mouseWheelSlider = document.getElementById('mouseWheelSlider');
+                const mouseWheelValue = document.getElementById('mouseWheelValue');
+                const saveMouseWheelBtn = document.getElementById('saveMouseWheelBtn');
+                const mouseWheelMessage = document.getElementById('mouseWheelMessage');
+
+                const savedMouseWheelSensitivity = localStorage.getItem('mouseWheelSensitivity');
+                if (savedMouseWheelSensitivity) {
+                    mouseWheelSlider.value = savedMouseWheelSensitivity;
+                    mouseWheelValue.textContent = savedMouseWheelSensitivity;
+                } else {
+                    mouseWheelSlider.value = 10;
+                    mouseWheelValue.textContent = '10';
+                }
+
+                mouseWheelSlider.addEventListener('input', function() {
+                    mouseWheelValue.textContent = this.value;
+                });
+
+                saveMouseWheelBtn.addEventListener('click', function() {
+                    localStorage.setItem('mouseWheelSensitivity', mouseWheelSlider.value);
+                    mouseWheelMessage.style.display = 'block';
+                    setTimeout(function() {
+                        mouseWheelMessage.style.display = 'none';
                     }, 2000);
                 });
             });

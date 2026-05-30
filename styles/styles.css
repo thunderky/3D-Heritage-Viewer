@@ -834,7 +834,7 @@
 
 .intro-text {
     line-height: 2.2; /* 楷体行高调整 */
-    color: #ececec;
+    color: #ffffff;
     font-size: 1.15rem;
     max-width: 900px;
     margin: 0 auto;
@@ -847,10 +847,9 @@
     text-indent: 2em;
     position: relative;
     padding: 1rem 0;
-    transition: all 0.1s ease-out; /* 缩短过渡时间，让效果更明显 */
     font-size: 1.15rem; /* 基础字体大小 */
-    opacity: 0.6; /* 初始透明度 */
-    transform: translateY(10px); /* 初始位置 */
+    color: #ffffff;
+    opacity: 1;
     font-family: inherit; /* 继承父元素的手写体 */
     letter-spacing: 1px; /* 增加字间距，让手写体更清晰 */
 }

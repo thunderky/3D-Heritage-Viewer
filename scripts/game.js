@@ -24,8 +24,12 @@ const CONFIG = {
     interaction: {
         rotateSensitivityKey: 'rotateSensitivity',
         scaleSensitivityKey: 'scaleSensitivity',
+        mouseDragSensitivityKey: 'mouseDragSensitivity',
+        mouseWheelSensitivityKey: 'mouseWheelSensitivity',
         defaultRotateSensitivity: 0.02,
-        defaultScaleSensitivity: 0.2,
+        defaultScaleSensitivity: 1.5,
+        defaultMouseDragSensitivity: 1.0,
+        defaultMouseWheelSensitivity: 10.0,
         animationScrollThreshold: 40,
         pulseSpeed: 8,
         pulseAmplitude: 0.5,
@@ -254,6 +258,18 @@ export class Game {
         this.scaleInitialPinchDistance = null;
         this.scaleInitialModelScale = null;
         this.scaleSensitivity = this._loadSensitivity('scaleSensitivity', CONFIG.interaction.defaultScaleSensitivity);
+        this.mouseDragSensitivity = this._loadSensitivity('mouseDragSensitivity', CONFIG.interaction.defaultMouseDragSensitivity);
+        this.mouseWheelSensitivity = this._loadSensitivity('mouseWheelSensitivity', CONFIG.interaction.defaultMouseWheelSensitivity);
+
+        // 鼠标交互状态
+        this.mouseIsDragging = false;
+        this.mouseIsRotating = false;
+        this.mouseLastX = 0;
+        this.mouseLastY = 0;
+        this.mouseGrabScreenX = 0;
+        this.mouseGrabScreenY = 0;
+        this.mouseGrabModelPos = new THREE.Vector3();
+        this.mouseGrabStartDepth = 0;
 
         // 动画控制
         this.animationControlHandIndex = -1;
@@ -277,8 +293,6 @@ export class Game {
         this.interactionModeContainer = null;
         this.interactionModeButtons = {};
         this.instructionTextElement = null;
-        this.speechStatusElement = null;
-        this.speechStatusTextElement = null;
         this.lastSpeechAIText = '';
         this.lastSpeechAITimestamp = 0;
     }
@@ -292,6 +306,7 @@ export class Game {
         this._setupDOM();
         this._setupThree();
         this._setupSpeechRecognition();
+        this._setupMouseInteraction();
         
         await this._loadAssets();
         await this._setupHandTracking();
@@ -329,6 +344,12 @@ export class Game {
             } else if (e.key === 'rotateSensitivity') {
                 this.rotateSensitivity = parseFloat(e.newValue);
                 this.modelLoadingBubble?.showMessage("旋转灵敏度已更新", 2000);
+            } else if (e.key === 'mouseDragSensitivity') {
+                this.mouseDragSensitivity = parseFloat(e.newValue);
+                this.modelLoadingBubble?.showMessage("鼠标拖拽灵敏度已更新", 2000);
+            } else if (e.key === 'mouseWheelSensitivity') {
+                this.mouseWheelSensitivity = parseFloat(e.newValue);
+                this.modelLoadingBubble?.showMessage("滚轮缩放灵敏度已更新", 2000);
             }
         });
     }
@@ -1447,49 +1468,121 @@ export class Game {
 
     // ========== 语音识别 ==========
     _setupSpeechRecognition() {
-        // 创建语音状态显示
-        this.speechStatusElement = document.createElement('div');
-        this.speechStatusElement.style.cssText = `
-            background-color: rgba(0,0,0,0.6);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 14px;
-            margin-top: 4px;
-        `;
-        this.speechStatusElement.innerHTML = '语音识别状态：<span id="speech-status-text">已启用</span>';
-        this.speechStatusTextElement = this.speechStatusElement.querySelector('#speech-status-text');
-        this.interactionModeContainer.appendChild(this.speechStatusElement);
-
-        this.updateSpeechStatusDisplay = () => {
-            const enabled = localStorage.getItem('speechRecognitionEnabled') !== 'false';
-            if (this.speechStatusTextElement) {
-                this.speechStatusTextElement.textContent = enabled ? '已启用' : '已禁用';
-                this.speechStatusElement.style.backgroundColor = enabled ? 
-                    'rgba(0,123,255,0.6)' : 'rgba(108,117,125,0.6)';
-            }
-        };
-
-        this.updateSpeechStatusDisplay();
-
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'speechRecognitionEnabled') {
-                this.speechManager.updateSpeechRecognitionState();
-                this.updateSpeechStatusDisplay();
-            }
-        });
-
         // 初始化SpeechManager
         this.speechManager = new SpeechManager(
             (finalTranscript, interimTranscript) => this._onSpeechResult(finalTranscript, interimTranscript),
             (isActive) => this._onSpeechActiveChange(isActive)
         );
 
+        // 监听其他标签页对语音识别设置的修改
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'speechRecognitionEnabled') {
+                this.speechManager.updateSpeechRecognitionState();
+            }
+        });
+
         if (this.speechBubble) {
             this.speechBubble.innerHTML = "...";
             this.speechBubble.style.opacity = '0.7';
             this._updateSpeechBubbleAppearance();
         }
+    }
+
+    // ========== 鼠标交互 ==========
+    _setupMouseInteraction() {
+        const canvas = this.renderer.domElement;
+
+        canvas.addEventListener('mousedown', (e) => {
+            if (e.button !== 0) return; // 仅响应左键
+            if (!this.pandaModel) return;
+
+            const screenPoint = this._mouseToScreenPoint(e);
+
+            if (e.ctrlKey) {
+                // Ctrl + 拖拽 = 旋转
+                this.mouseIsRotating = true;
+                this.mouseIsDragging = false;
+                this.mouseLastX = screenPoint.x;
+                this.mouseLastY = screenPoint.y;
+            } else {
+                // 普通拖拽 = 平移
+                this.mouseIsDragging = true;
+                this.mouseIsRotating = false;
+                this.mouseGrabScreenX = screenPoint.x;
+                this.mouseGrabScreenY = screenPoint.y;
+                this.mouseGrabModelPos = this.pandaModel.position.clone();
+                this.mouseGrabStartDepth = this.pandaModel.position.z;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!this.mouseIsDragging && !this.mouseIsRotating) return;
+            if (!this.pandaModel) return;
+
+            const screenPoint = this._mouseToScreenPoint(e);
+
+            if (this.mouseIsRotating) {
+                const deltaX = screenPoint.x - this.mouseLastX;
+                const deltaY = screenPoint.y - this.mouseLastY;
+
+                if (Math.abs(deltaX) > 0.5) {
+                    this.pandaModel.rotation.y -= deltaX * this.rotateSensitivity;
+                }
+                if (Math.abs(deltaY) > 0.5) {
+                    this.pandaModel.rotation.x -= deltaY * this.rotateSensitivity;
+                    this.pandaModel.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, this.pandaModel.rotation.x));
+                }
+
+                this.mouseLastX = screenPoint.x;
+                this.mouseLastY = screenPoint.y;
+            }
+
+            if (this.mouseIsDragging) {
+                const currentPoint3D = this._screenToWorld(screenPoint);
+                const grabPoint3D = this._screenToWorld({ x: this.mouseGrabScreenX, y: this.mouseGrabScreenY });
+
+                const worldDeltaX = (currentPoint3D.x - grabPoint3D.x) * this.mouseDragSensitivity;
+                const worldDeltaY = (currentPoint3D.y - grabPoint3D.y) * this.mouseDragSensitivity;
+
+                this.pandaModel.position.x = this.mouseGrabModelPos.x + worldDeltaX;
+                this.pandaModel.position.y = this.mouseGrabModelPos.y + worldDeltaY;
+                this.pandaModel.position.z = Math.max(
+                    CONFIG.model.minZ,
+                    Math.min(CONFIG.model.maxZ, this.mouseGrabModelPos.z)
+                );
+            }
+        });
+
+        window.addEventListener('mouseup', () => {
+            this.mouseIsDragging = false;
+            this.mouseIsRotating = false;
+        });
+
+        this.renderDiv.addEventListener('wheel', (e) => {
+            if (!this.pandaModel) return;
+            e.preventDefault();
+            e.stopPropagation();
+
+            const scaleChange = -e.deltaY * this.scaleSensitivity * 0.008 * this.mouseWheelSensitivity;
+            let newScale = this.pandaModel.scale.x + scaleChange;
+
+            const minScale = this.pandaModel.userData?.minScale || CONFIG.model.defaultMinScale;
+            const maxScale = this.pandaModel.userData?.maxScale || CONFIG.model.defaultMaxScale;
+            newScale = Math.max(minScale, Math.min(maxScale, newScale));
+
+            this.pandaModel.scale.set(newScale, newScale, newScale);
+        }, { passive: false });
+    }
+
+    _mouseToScreenPoint(e) {
+        const rect = this.renderDiv.getBoundingClientRect();
+        return {
+            x: e.clientX - rect.left - this.renderDiv.clientWidth / 2,
+            y: -(e.clientY - rect.top - this.renderDiv.clientHeight / 2)
+        };
     }
 
     _onSpeechResult(finalTranscript, interimTranscript) {

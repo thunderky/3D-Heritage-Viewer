@@ -489,6 +489,87 @@
                 display: none;
             }
         }
+
+        /* ==================== 日间模式覆盖 ==================== */
+        body.light-mode {
+            background: #f5f0e8 !important;
+            color: #1a1a1a !important;
+        }
+
+        body.light-mode .timeline-line {
+            background: linear-gradient(to bottom,
+                transparent 0%,
+                #8B0000 10%,
+                #8B0000 90%,
+                transparent 100%) !important;
+        }
+
+        body.light-mode .timeline-dot {
+            background: #8B0000 !important;
+            border-color: #f5f0e8 !important;
+            box-shadow: 0 0 20px rgba(139, 0, 0, 0.4) !important;
+        }
+
+        body.light-mode .chapter-card {
+            background: rgba(255, 255, 255, 0.9) !important;
+            border-color: #b8960f !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        body.light-mode .chapter-card:hover {
+            border-color: #8B0000 !important;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15),
+                        0 0 30px rgba(139, 0, 0, 0.15) !important;
+        }
+
+        body.light-mode .chapter-left .chapter-card::after {
+            border-left-color: #b8960f !important;
+        }
+
+        body.light-mode .chapter-right .chapter-card::before {
+            border-right-color: #b8960f !important;
+        }
+
+        body.light-mode .chapter-title {
+            color: #8B0000 !important;
+            text-shadow: none !important;
+        }
+
+        body.light-mode .chapter-subtitle {
+            color: #555 !important;
+        }
+
+        body.light-mode .chapter-period {
+            background: rgba(139, 0, 0, 0.1) !important;
+            border-color: #8B0000 !important;
+            color: #8B0000 !important;
+        }
+
+        body.light-mode .chapter-description {
+            color: #1a1a1a !important;
+        }
+
+        body.light-mode .page-header h1 {
+            color: #8B0000 !important;
+            text-shadow: none !important;
+        }
+
+        body.light-mode .page-header p {
+            color: #555 !important;
+        }
+
+        body.light-mode .particle {
+            background: rgba(139, 0, 0, 0.3) !important;
+        }
+
+        body.light-mode .explore-btn {
+            background: linear-gradient(135deg, #8B0000 0%, #a0522d 100%) !important;
+            color: #fff !important;
+        }
+
+        body.light-mode .explore-btn:hover {
+            background: linear-gradient(135deg, #a0522d 0%, #8B0000 100%) !important;
+        }
     </style>
 </head>
 <body style="margin: 0; padding: 0; overflow-x: hidden;">
@@ -502,9 +583,11 @@
                 </div>
             </div>
             <div class="nav-right">
+                <button id="galleryBtn" class="nav-btn">文物列表</button>
                 <button id="tutorialBtn" class="nav-btn">使用教程</button>
                 <button id="settingsBtn" class="nav-btn">系统设置</button>
                 <button id="homeBtn" class="nav-btn">返回首页</button>
+                <button id="themeToggleBtn" class="theme-toggle-btn" title="切换日间/夜间模式">🌙 夜间模式</button>
             </div>
         </div>
     </nav>
@@ -532,7 +615,6 @@
             </div>
             <div class="chapter-card">
                 <div class="chapter-pattern"></div>
-                <div class="chapter-icon">🌅</div>
                 <h2 class="chapter-title">曙光初现</h2>
                 <div class="chapter-subtitle">史前时期</div>
                 <div class="chapter-period">约170万年前 - 公元前21世纪</div>
@@ -555,7 +637,6 @@
             </div>
             <div class="chapter-card">
                 <div class="chapter-pattern"></div>
-                <div class="chapter-icon">⚱️</div>
                 <h2 class="chapter-title">青铜礼乐</h2>
                 <div class="chapter-subtitle">夏商周时期</div>
                 <div class="chapter-period">公元前21世纪 - 公元前221年</div>
@@ -578,7 +659,6 @@
             </div>
             <div class="chapter-card">
                 <div class="chapter-pattern"></div>
-                <div class="chapter-icon">👑</div>
                 <h2 class="chapter-title">大一统与交融</h2>
                 <div class="chapter-subtitle">秦汉至南北朝</div>
                 <div class="chapter-period">公元前221年 - 公元589年</div>
@@ -601,7 +681,6 @@
             </div>
             <div class="chapter-card">
                 <div class="chapter-pattern"></div>
-                <div class="chapter-icon">🎭</div>
                 <h2 class="chapter-title">盛世气象</h2>
                 <div class="chapter-subtitle">隋唐至宋元</div>
                 <div class="chapter-period">公元589年 - 公元1368年</div>
@@ -624,7 +703,6 @@
             </div>
             <div class="chapter-card">
                 <div class="chapter-pattern"></div>
-                <div class="chapter-icon">🌟</div>
                 <h2 class="chapter-title">古典余晖与变革</h2>
                 <div class="chapter-subtitle">明清至近代</div>
                 <div class="chapter-period">公元1368年 - 至今</div>
@@ -694,7 +772,11 @@
             window.location.href = 'tutorial.html';
         });
         
-        document.getElementById('settingsBtn')?.addEventListener('click', () => {
+        
+            document.getElementById('galleryBtn')?.addEventListener('click', function() {
+                window.location.href = 'gallery.html';
+            });
+            document.getElementById('settingsBtn')?.addEventListener('click', () => {
             window.location.href = 'settings.html';
         });
         
@@ -723,5 +805,41 @@
             });
         });
     </script>
+
+    <!-- 主题切换逻辑 -->
+    <script>
+        (function() {
+            const THEME_KEY = 'themePreference';
+            const btn = document.getElementById('themeToggleBtn');
+            if (!btn) return;
+
+            function setTheme(mode) {
+                if (mode === 'light') {
+                    document.body.classList.add('light-mode');
+                    btn.innerHTML = '☀️ 日间模式';
+                    btn.title = '切换至夜间模式';
+                } else {
+                    document.body.classList.remove('light-mode');
+                    btn.innerHTML = '🌙 夜间模式';
+                    btn.title = '切换至日间模式';
+                }
+                localStorage.setItem(THEME_KEY, mode);
+            }
+
+            // 初始化：默认夜间模式
+            const saved = localStorage.getItem(THEME_KEY);
+            if (saved === 'light') {
+                setTheme('light');
+            } else {
+                setTheme('dark');
+            }
+
+            btn.addEventListener('click', function() {
+                const current = localStorage.getItem(THEME_KEY);
+                setTheme(current === 'light' ? 'dark' : 'light');
+            });
+        })();
+    </script>
+
 </body>
 </html>

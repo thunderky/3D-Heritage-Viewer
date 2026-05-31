@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文物列表 - 3D数字文物展馆</title>
+    <link rel="icon" type="image/png" href="../images/favicon.png">
+    <link rel="stylesheet" href="../styles/styles.css">
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: '楷体', 'KaiTi', 'STKaiti', 'Microsoft YaHei', sans-serif;
+            background: #0a0a0a;
+            color: #f5f5f5;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* ========== 页面头部 ========== */
+        .gallery-hero {
+            margin-top: 80px;
+            padding: 3rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(139,0,0,0.3) 0%, rgba(0,0,0,0.9) 50%, rgba(139,105,20,0.2) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gallery-hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('../images/pattern.jpg') center/cover;
+            opacity: 0.08;
+            z-index: 0;
+        }
+
+        .gallery-hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .gallery-hero h1 {
+            font-size: 2.8rem;
+            margin: 0 0 1rem 0;
+            color: #d4af37;
+            letter-spacing: 4px;
+            font-family: '楷体', 'KaiTi', 'STKaiti', serif;
+            text-shadow: 0 2px 10px rgba(212,175,55,0.3);
+        }
+
+        .gallery-hero p {
+            font-size: 1.15rem;
+            color: #bbb;
+            line-height: 1.8;
+            margin: 0;
+        }
+
+        .gallery-hero .artifact-count {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.4rem 1.2rem;
+            background: rgba(212,175,55,0.15);
+            border: 1px solid rgba(212,175,55,0.3);
+            border-radius: 20px;
+            font-size: 0.95rem;
+            color: #d4af37;
+        }
+
+        /* ========== 筛选栏 ========== */
+        .filter-bar {
+            position: sticky;
+            top: 80px;
+            z-index: 500;
+            background: rgba(0,0,0,0.92);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(212,175,55,0.2);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group-inline {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: #d4af37;
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+
+        .filter-chip {
+            padding: 0.4rem 1rem;
+            border: 1px solid rgba(212,175,55,0.3);
+            background: transparent;
+            color: #ccc;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            font-family: inherit;
+        }
+
+        .filter-chip:hover {
+            border-color: #d4af37;
+            color: #d4af37;
+        }
+
+        .filter-chip.active {
+            background: #d4af37;
+            color: #000;
+            border-color: #d4af37;
+            font-weight: 600;
+        }
+
+        /* ========== 文物网格 ========== */
+        .gallery-main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .artifacts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.8rem;
+        }
+
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #888;
+            font-size: 1.1rem;
+        }
+
+        /* ========== 文物卡片 ========== */
+        .artifact-card {
+            background: rgba(255,255,255,0.04);
+            border-radius: 16px;
+            border: 1px solid rgba(212,175,55,0.15);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .artifact-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(212,175,55,0.5);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.4), 0 0 30px rgba(212,175,55,0.1);
+        }
+
+        .card-image {
+            height: 220px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .card-image-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.25;
+            transition: all 0.4s ease;
+        }
+
+        .artifact-card:hover .card-image-bg {
+            opacity: 0.4;
+            transform: scale(1.05);
+        }
+
+        .card-image-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom,
+                rgba(0,0,0,0.1) 0%,
+                rgba(0,0,0,0.6) 100%);
+        }
+
+        .card-icon-img {
+            width: 140px;
+            height: 140px;
+            object-fit: contain;
+            position: relative;
+            z-index: 2;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+            transition: transform 0.35s ease;
+            border-radius: 8px;
+        }
+
+        .artifact-card:hover .card-icon-img {
+            transform: scale(1.1);
+        }
+
+        .card-icon-fallback {
+            font-size: 5rem;
+            position: relative;
+            z-index: 2;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+            transition: transform 0.35s ease;
+            display: none;
+        }
+
+        .artifact-card:hover .card-icon-fallback {
+            transform: scale(1.1);
+        }
+
+        .card-dynasty-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 3;
+            padding: 0.3rem 0.8rem;
+            background: rgba(0,0,0,0.7);
+            border: 1px solid rgba(212,175,55,0.4);
+            border-radius: 15px;
+            font-size: 1rem;
+            color: #d4af37;
+            backdrop-filter: blur(5px);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 0 0 0.5rem 0;
+            letter-spacing: 1px;
+        }
+
+        .card-meta {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .card-tag {
+            padding: 0.2rem 0.7rem;
+            border-radius: 12px;
+            font-size: 0.88rem;
+            font-weight: 600;
+        }
+
+        .tag-dynasty {
+            background: rgba(212,175,55,0.15);
+            color: #d4af37;
+        }
+
+        .tag-category {
+            background: rgba(74,144,226,0.15);
+            color: #6db3f2;
+        }
+
+        .card-desc {
+            color: #999;
+            font-size: 1rem;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin: 0 0 1rem 0;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0.8rem;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .card-year {
+            font-size: 0.95rem;
+            color: #888;
+        }
+
+        .card-action {
+            font-size: 0.95rem;
+            color: #d4af37;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: gap 0.3s ease;
+        }
+
+        .artifact-card:hover .card-action {
+            gap: 0.6rem;
+        }
+
+        /* ========== 详情弹窗 ========== */
+        .detail-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 3000;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            animation: fadeIn 0.25s ease;
+        }
+
+        .detail-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .detail-modal {
+            background: rgba(20,20,20,0.97);
+            border: 2px solid rgba(212,175,55,0.4);
+            border-radius: 20px;
+            max-width: 650px;
+            width: 92%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            animation: slideUp 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .detail-header {
+            position: relative;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 18px 18px 0 0;
+        }
+
+        .detail-header-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.3;
+        }
+
+        .detail-header-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom,
+                rgba(0,0,0,0.3) 0%,
+                rgba(0,0,0,0.85) 100%);
+        }
+
+        .detail-icon-img {
+            max-width: 180px;
+            max-height: 160px;
+            object-fit: contain;
+            position: relative;
+            z-index: 2;
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.6));
+            border-radius: 8px;
+        }
+
+        .detail-icon-fallback {
+            font-size: 6rem;
+            position: relative;
+            z-index: 2;
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.6));
+            display: none;
+        }
+
+        .detail-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 5;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(0,0,0,0.5);
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .detail-close:hover {
+            background: rgba(220,53,69,0.8);
+            border-color: rgba(220,53,69,0.8);
+            transform: rotate(90deg);
+        }
+
+        .detail-body {
+            padding: 2rem;
+        }
+
+        .detail-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 0 0 0.8rem 0;
+            letter-spacing: 2px;
+        }
+
+        .detail-meta {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-meta-item {
+            padding: 0.3rem 1rem;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .detail-meta-item.dynasty {
+            background: rgba(212,175,55,0.15);
+            color: #d4af37;
+            border: 1px solid rgba(212,175,55,0.3);
+        }
+
+        .detail-meta-item.category {
+            background: rgba(74,144,226,0.15);
+            color: #6db3f2;
+            border: 1px solid rgba(74,144,226,0.3);
+        }
+
+        .detail-meta-item.year {
+            background: rgba(255,255,255,0.05);
+            color: #ccc;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .detail-description {
+            color: #bbb;
+            line-height: 1.9;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            text-align: justify;
+        }
+
+        .detail-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .detail-btn {
+            flex: 1;
+            min-width: 160px;
+            padding: 0.9rem 1.5rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-family: inherit;
+        }
+
+        .detail-btn.primary {
+            background: linear-gradient(135deg, #d4af37 0%, #b8960f 100%);
+            color: #000;
+            border: none;
+        }
+
+        .detail-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(212,175,55,0.3);
+        }
+
+        .detail-btn.secondary {
+            background: transparent;
+            color: #d4af37;
+            border: 2px solid #d4af37;
+        }
+
+        .detail-btn.secondary:hover {
+            background: rgba(212,175,55,0.1);
+            transform: translateY(-2px);
+        }
+
+        /* ========== 日间模式覆盖 ========== */
+        body.light-mode {
+            background: #f5f0e8 !important;
+        }
+
+        body.light-mode .gallery-hero {
+            background: linear-gradient(135deg, rgba(139,0,0,0.1) 0%, rgba(245,240,232,0.9) 50%, rgba(139,105,20,0.1) 100%) !important;
+        }
+
+        body.light-mode .gallery-hero h1 {
+            color: #8B6914 !important;
+            text-shadow: none !important;
+        }
+
+        body.light-mode .gallery-hero p {
+            color: #555 !important;
+        }
+
+        body.light-mode .gallery-hero .artifact-count {
+            background: rgba(139,105,20,0.1) !important;
+            border-color: rgba(139,105,20,0.3) !important;
+            color: #8B6914 !important;
+        }
+
+        body.light-mode .filter-bar {
+            background: rgba(255,255,255,0.92) !important;
+            border-bottom-color: rgba(139,105,20,0.15) !important;
+        }
+
+        body.light-mode .filter-label {
+            color: #8B6914 !important;
+        }
+
+        body.light-mode .filter-chip {
+            border-color: rgba(139,105,20,0.25) !important;
+            color: #555 !important;
+        }
+
+        body.light-mode .filter-chip:hover {
+            border-color: #8B6914 !important;
+            color: #8B6914 !important;
+        }
+
+        body.light-mode .filter-chip.active {
+            background: #8B6914 !important;
+            color: #fff !important;
+            border-color: #8B6914 !important;
+        }
+
+        body.light-mode .artifact-card {
+            background: rgba(255,255,255,0.85) !important;
+            border-color: rgba(139,105,20,0.2) !important;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06) !important;
+        }
+
+        body.light-mode .artifact-card:hover {
+            border-color: rgba(139,105,20,0.5) !important;
+            box-shadow: 0 12px 36px rgba(0,0,0,0.12), 0 0 20px rgba(139,105,20,0.08) !important;
+        }
+
+        body.light-mode .card-title {
+            color: #1a1a1a !important;
+        }
+
+        body.light-mode .tag-dynasty {
+            background: rgba(139,105,20,0.1) !important;
+            color: #8B6914 !important;
+        }
+
+        body.light-mode .tag-category {
+            background: rgba(74,144,226,0.1) !important;
+            color: #1976d2 !important;
+        }
+
+        body.light-mode .card-desc {
+            color: #666 !important;
+        }
+
+        body.light-mode .card-year {
+            color: #888 !important;
+        }
+
+        body.light-mode .card-action {
+            color: #8B6914 !important;
+        }
+
+        body.light-mode .card-dynasty-badge {
+            background: rgba(255,255,255,0.8) !important;
+            border-color: rgba(139,105,20,0.3) !important;
+            color: #8B6914 !important;
+        }
+
+        body.light-mode .card-footer {
+            border-top-color: rgba(0,0,0,0.06) !important;
+        }
+
+        body.light-mode .detail-overlay {
+            background: rgba(0,0,0,0.5) !important;
+        }
+
+        body.light-mode .detail-modal {
+            background: rgba(255,255,255,0.97) !important;
+            border-color: rgba(139,105,20,0.3) !important;
+        }
+
+        body.light-mode .detail-title {
+            color: #1a1a1a !important;
+        }
+
+        body.light-mode .detail-description {
+            color: #555 !important;
+        }
+
+        body.light-mode .detail-meta-item.year {
+            background: rgba(0,0,0,0.03) !important;
+            color: #666 !important;
+            border-color: rgba(0,0,0,0.1) !important;
+        }
+
+        body.light-mode .detail-btn.secondary {
+            color: #8B6914 !important;
+            border-color: #8B6914 !important;
+        }
+
+        body.light-mode .detail-btn.secondary:hover {
+            background: rgba(139,105,20,0.08) !important;
+        }
+
+        body.light-mode .no-results {
+            color: #999 !important;
+        }
+
+        /* ========== 响应式 ========== */
+        @media (max-width: 768px) {
+            .gallery-hero h1 { font-size: 2rem; }
+            .artifacts-grid {
+                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+                gap: 1.2rem;
+            }
+            .filter-bar { gap: 1rem; padding: 0.8rem 1rem; }
+            .detail-modal { width: 95%; max-height: 90vh; }
+            .detail-actions { flex-direction: column; }
+            .card-image { height: 180px; }
+        }
+
+        @media (max-width: 480px) {
+            .artifacts-grid { grid-template-columns: 1fr; }
+            .gallery-hero h1 { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <nav class="museum-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <div class="nav-title">
+                    <span class="title-icon">🏛️</span>
+                    <span>3D数字文物展馆</span>
+                </div>
+            </div>
+            <div class="nav-right">
+                <button id="galleryBtn" class="nav-btn active">文物列表</button>
+                <button id="tutorialBtn" class="nav-btn">使用教程</button>
+                <button id="settingsBtn" class="nav-btn">系统设置</button>
+                <button id="themeToggleBtn" class="theme-toggle-btn" title="切换日间/夜间模式">🌙 夜间模式</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页面头部 -->
+    <section class="gallery-hero">
+        <div class="gallery-hero-content">
+            <h1>🏺 文物典藏</h1>
+            <p>穿越时空的瑰宝，每一件文物都承载着一段不可替代的历史记忆。<br>点击任意文物卡片，深入了解它背后的故事。</p>
+            <span class="artifact-count" id="totalCount">共 0 件藏品</span>
+        </div>
+    </section>
+
+    <!-- 筛选栏 -->
+    <div class="filter-bar" id="filterBar">
+        <div class="filter-group-inline">
+            <span class="filter-label">📅 朝代</span>
+            <button class="filter-chip active" data-filter-type="dynasty" data-filter-value="all">全部</button>
+        </div>
+        <div class="filter-group-inline">
+            <span class="filter-label">📂 类别</span>
+            <button class="filter-chip active" data-filter-type="category" data-filter-value="all">全部</button>
+        </div>
+    </div>
+
+    <!-- 文物网格 -->
+    <main class="gallery-main">
+        <div class="artifacts-grid" id="artifactsGrid"></div>
+    </main>
+
+    <!-- 详情弹窗 -->
+    <div class="detail-overlay" id="detailOverlay">
+        <div class="detail-modal" id="detailModal">
+            <div class="detail-header" id="detailHeader">
+                <div class="detail-header-bg" id="detailHeaderBg"></div>
+                <div class="detail-header-overlay"></div>
+                <img class="detail-icon-img" id="detailIconImg" src="" alt="文物图片"
+                     onerror="this.style.display='none'; document.getElementById('detailIconFallback').style.display='block';">
+                <span class="detail-icon-fallback" id="detailIconFallback">🏺</span>
+                <button class="detail-close" id="detailClose" title="关闭">&times;</button>
+            </div>
+            <div class="detail-body">
+                <h2 class="detail-title" id="detailTitle"></h2>
+                <div class="detail-meta" id="detailMeta"></div>
+                <div class="detail-description" id="detailDescription"></div>
+                <div class="detail-actions">
+                    <button class="detail-btn primary" id="detailView3D">🔍 3D 观赏</button>
+                    <button class="detail-btn secondary" id="detailCloseBtn">✕ 关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        // ========== 文物完整数据 ==========
+        const ARTIFACTS = [
+            {
+                id: 'teacup', title: '茶壶',
+                dynasty: '清代', dynastyGroup: '明清至近代',
+                category: '陶瓷器', year: '',
+                image: '../images/茶壶.png', imageKey: 'mingqing',
+                modelPath: 'teacup.gltf',
+                shortDesc: '青色茶壶的釉彩技艺起源于宋代龙泉窑，清代豆青色进一步趋近绿色，成为独立釉色体系。'
+            },
+            {
+                id: 'modelNew', title: '乐舞俑',
+                dynasty: '唐代', dynastyGroup: '隋唐至宋元',
+                category: '雕塑', year: '',
+                image: '../images/乐舞俑.png', imageKey: 'suitang',
+                modelPath: 'modelNew.gltf',
+                shortDesc: '唐代乐舞俑尤为突出，常见三彩釉陶工艺，题材包括宫廷乐舞、胡人表演等。'
+            },
+            {
+                id: 'copper-chew', title: '二里头文化青铜器',
+                dynasty: '夏商', dynastyGroup: '夏商周时期',
+                category: '青铜器', year: '公元前21-16世纪',
+                image: '../images/二里头文化青铜器.png', imageKey: 'xiashangzhou',
+                modelPath: 'copper-chew.gltf',
+                shortDesc: '以河南洛阳偃师二里头遗址命名的青铜器，年代约当公元前21～前16世纪。'
+            },
+            {
+                id: 'armillary_sphere_1771', title: '浑天仪',
+                dynasty: '未知', dynastyGroup: '未知',
+                category: '科学仪器', year: '1771',
+                image: '../images/浑天仪.png', imageKey: 'pattern',
+                modelPath: 'armillary_sphere_1771/scene.gltf',
+                shortDesc: '一件天文仪器，用于演示天象并确定时间、赤道坐标和黄道坐标。由弗朗西斯谢克·斯武普斯基制作。'
+            },
+            {
+                id: 'ding_censer_with_an_openwork_cover', title: '鼎式镂空盖香炉',
+                dynasty: '清代', dynastyGroup: '明清至近代',
+                category: '陶瓷器', year: '1736-1795',
+                image: '../images/鼎式镂空盖香炉.png', imageKey: 'mingqing',
+                modelPath: 'ding_censer_with_an_openwork_cover/scene.gltf',
+                shortDesc: '采用掐丝珐琅工艺装饰，与镀金金属片的图形和镂空装饰完美契合，以龙为主导图案。'
+            },
+            {
+                id: 'mass_chalice', title: '弥撒圣杯',
+                dynasty: '未知', dynastyGroup: '未知',
+                category: '金银器', year: '1773',
+                image: '../images/弥撒圣杯.png', imageKey: 'pattern',
+                modelPath: 'mass_chalice/scene.gltf',
+                shortDesc: '由圣墓骑士团成员于1773年捐赠，采用镀金银制成，呈现独特的洛可可风格装饰。'
+            },
+            {
+                id: 'two_small_vases', title: '飞鹤花瓶',
+                dynasty: '未知', dynastyGroup: '未知',
+                category: '陶瓷器', year: '2000',
+                image: '../images/飞鹤花瓶.png', imageKey: 'pattern',
+                modelPath: 'two_small_vases/scene.gltf',
+                shortDesc: '两个形状相同的小花瓶，装饰有金属掐丝珐琅，描绘了深蓝色背景上飞翔的仙鹤。'
+            },
+            {
+                id: 'cauldron', title: '釜',
+                dynasty: '未知', dynastyGroup: '未知',
+                category: '陶瓷器', year: '1950',
+                image: '../images/釜.png', imageKey: 'pattern',
+                modelPath: 'cauldron/scene.gltf',
+                shortDesc: '由铜片制成的钟形大锅，采用了罗姆铜匠的传统开槽焊接工艺，内部有镀锡痕迹。'
+            },
+            {
+                id: 'ritual_hare_mask', title: '仪式用野兔面具',
+                dynasty: '未知', dynastyGroup: '未知',
+                category: '模型', year: '1900',
+                image: '../images/仪式用野兔面具.png', imageKey: 'pattern',
+                modelPath: 'ritual_hare_mask/scene.gltf',
+                shortDesc: '马里邦贾加拉悬崖多贡传统面具，以动物形和几何形体为特色，俗称"野兔面具"。'
+            },
+            {
+                id: 'mikiphone_pocket_phonograph', title: '袖珍留声机',
+                dynasty: '未知', dynastyGroup: '未知',
+                category: '模型', year: '1926',
+                image: '../images/袖珍留声机.png', imageKey: 'pattern',
+                modelPath: 'mikiphone_pocket_phonograph/scene.gltf',
+                shortDesc: '最早的袖珍可移动设备之一，被称为"维多利亚时代的随身听"和iPod的曾祖父。'
+            }
+        ];
+
+        const DYNASTY_IMAGES = {
+            'shiqian': '../images/shiqian.jpg',
+            'xiashangzhou': '../images/xiashangzhou.jpg',
+            'qinhan': '../images/qinhan.jpg',
+            'suitang': '../images/suitang.jpg',
+            'mingqing': '../images/mingqing.jpg',
+            'pattern': '../images/pattern.jpg'
+        };
+
+        let currentDynastyFilter = 'all';
+        let currentCategoryFilter = 'all';
+        let allDescriptions = {};
+
+        const artifactsGrid = document.getElementById('artifactsGrid');
+        const totalCount = document.getElementById('totalCount');
+        const detailOverlay = document.getElementById('detailOverlay');
+        const detailHeaderBg = document.getElementById('detailHeaderBg');
+        const detailTitle = document.getElementById('detailTitle');
+        const detailMeta = document.getElementById('detailMeta');
+        const detailDescription = document.getElementById('detailDescription');
+        const detailView3D = document.getElementById('detailView3D');
+
+        // ========== 筛选栏 ==========
+        function buildFilterBar() {
+            const dynasties = [...new Set(ARTIFACTS.map(a => a.dynastyGroup))];
+            const categories = [...new Set(ARTIFACTS.map(a => a.category))];
+
+            const dynastyGroup = document.querySelector('[data-filter-type="dynasty"]').parentElement;
+            dynasties.forEach(d => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-chip';
+                btn.setAttribute('data-filter-type', 'dynasty');
+                btn.setAttribute('data-filter-value', d);
+                btn.textContent = d;
+                btn.addEventListener('click', () => setFilter('dynasty', d, btn));
+                dynastyGroup.appendChild(btn);
+            });
+
+            const categoryGroup = document.querySelector('[data-filter-type="category"]').parentElement;
+            categories.forEach(c => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-chip';
+                btn.setAttribute('data-filter-type', 'category');
+                btn.setAttribute('data-filter-value', c);
+                btn.textContent = c;
+                btn.addEventListener('click', () => setFilter('category', c, btn));
+                categoryGroup.appendChild(btn);
+            });
+
+            document.querySelectorAll('.filter-chip[data-filter-value="all"]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const type = this.getAttribute('data-filter-type');
+                    setFilter(type, 'all', this);
+                });
+            });
+        }
+
+        function setFilter(type, value, btn) {
+            if (type === 'dynasty') currentDynastyFilter = value;
+            if (type === 'category') currentCategoryFilter = value;
+            document.querySelectorAll(`.filter-chip[data-filter-type="${type}"]`).forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderArtifacts();
+        }
+
+        // ========== 渲染 ==========
+        function renderArtifacts() {
+            const filtered = ARTIFACTS.filter(a => {
+                const dynastyMatch = currentDynastyFilter === 'all' || a.dynastyGroup === currentDynastyFilter;
+                const categoryMatch = currentCategoryFilter === 'all' || a.category === currentCategoryFilter;
+                return dynastyMatch && categoryMatch;
+            });
+
+            totalCount.textContent = `共 ${filtered.length} 件藏品`;
+
+            if (filtered.length === 0) {
+                artifactsGrid.innerHTML = '<div class="no-results">🔍 没有找到匹配的文物，请尝试其他筛选条件</div>';
+                return;
+            }
+
+            artifactsGrid.innerHTML = filtered.map(a => {
+                const bgImage = DYNASTY_IMAGES[a.imageKey] || DYNASTY_IMAGES['pattern'];
+                return `
+                <div class="artifact-card" data-id="${a.id}" data-model="${a.modelPath}">
+                    <div class="card-image">
+                        <div class="card-image-bg" style="background-image: url('${bgImage}');"></div>
+                        <div class="card-image-overlay"></div>
+                        <img class="card-icon-img" src="${a.image}" alt="${a.title}" loading="lazy"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <span class="card-icon-fallback">🏺</span>
+                        <span class="card-dynasty-badge">${a.dynasty}</span>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">${a.title}</h3>
+                        <div class="card-meta">
+                            <span class="card-tag tag-dynasty">📅 ${a.dynasty}</span>
+                            <span class="card-tag tag-category">📂 ${a.category}</span>
+                        </div>
+                        <p class="card-desc">${a.shortDesc}</p>
+                        <div class="card-footer">
+                            <span class="card-year">${a.year || '年代不详'}</span>
+                            <span class="card-action">查看详情 →</span>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+
+            artifactsGrid.querySelectorAll('.artifact-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    const modelPath = this.getAttribute('data-model');
+                    openDetail(id, modelPath);
+                });
+            });
+        }
+
+        // ========== 详情弹窗 ==========
+        function openDetail(artifactId, modelPath) {
+            const artifact = ARTIFACTS.find(a => a.id === artifactId);
+            if (!artifact) return;
+
+            const fullDesc = (allDescriptions[artifactId] && allDescriptions[artifactId].description)
+                ? allDescriptions[artifactId].description
+                : artifact.shortDesc;
+
+            detailHeaderBg.style.backgroundImage = `url('${DYNASTY_IMAGES[artifact.imageKey]}')`;
+
+            const detailImg = document.getElementById('detailIconImg');
+            const detailFallback = document.getElementById('detailIconFallback');
+            if (artifact.image) {
+                detailImg.src = artifact.image;
+                detailImg.style.display = 'block';
+                detailFallback.style.display = 'none';
+            } else {
+                detailImg.style.display = 'none';
+                detailFallback.style.display = 'block';
+            }
+
+            detailTitle.textContent = artifact.title;
+            detailMeta.innerHTML = `
+                <span class="detail-meta-item dynasty">📅 ${artifact.dynasty}</span>
+                <span class="detail-meta-item category">📂 ${artifact.category}</span>
+                ${artifact.year ? `<span class="detail-meta-item year">🕐 ${artifact.year}</span>` : ''}
+            `;
+            detailDescription.textContent = fullDesc;
+
+            detailView3D.onclick = () => {
+                window.location.href = `main.html?model=${encodeURIComponent(modelPath)}`;
+            };
+
+            detailOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDetail() {
+            detailOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.getElementById('detailClose').addEventListener('click', closeDetail);
+        document.getElementById('detailCloseBtn').addEventListener('click', closeDetail);
+        detailOverlay.addEventListener('click', function(e) { if (e.target === detailOverlay) closeDetail(); });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && detailOverlay.classList.contains('active')) closeDetail();
+        });
+
+        // ========== 描述数据 ==========
+        function loadDescriptions() {
+            fetch('../data/descriptions.json')
+                .then(res => res.json())
+                .then(data => { allDescriptions = data; })
+                .catch(err => console.warn('描述数据加载失败:', err));
+        }
+
+        // ========== 导航 ==========
+        document.getElementById('galleryBtn')?.addEventListener('click', () => window.location.href = 'gallery.html');
+        document.getElementById('tutorialBtn')?.addEventListener('click', () => window.location.href = 'tutorial.html');
+        document.getElementById('settingsBtn')?.addEventListener('click', () => window.location.href = 'settings.html');
+
+        // ========== 启动 ==========
+        function init() {
+            buildFilterBar();
+            loadDescriptions();
+            renderArtifacts();
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    })();
+    </script>
+
+    <!-- 主题切换 -->
+    <script>
+        (function() {
+            const THEME_KEY = 'themePreference';
+            const btn = document.getElementById('themeToggleBtn');
+            if (!btn) return;
+            function setTheme(mode) {
+                if (mode === 'light') {
+                    document.body.classList.add('light-mode');
+                    btn.innerHTML = '☀️ 日间模式';
+                } else {
+                    document.body.classList.remove('light-mode');
+                    btn.innerHTML = '🌙 夜间模式';
+                }
+                localStorage.setItem(THEME_KEY, mode);
+            }
+            const saved = localStorage.getItem(THEME_KEY);
+            setTheme(saved === 'light' ? 'light' : 'dark');
+            btn.addEventListener('click', function() {
+                setTheme(localStorage.getItem(THEME_KEY) === 'light' ? 'dark' : 'light');
+            });
+        })();
+    </script>
+</body>
+</html>
